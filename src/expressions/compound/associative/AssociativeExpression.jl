@@ -10,7 +10,6 @@ end
 AssociativeOperation{Op, T}(arguments::Expression{<:T}...) where {Op, T} = AssociativeOperation{Op}(collect(arguments))
 
 AssociativeOperation{Op}(arguments::Vector{<:Expression}) where Op = AssociativeOperation{Op, unionise(arguments)}(arguments)
-AssociativeOperation{Op}(arguments::Vector{<:Expression{T}}) where {Op, T} = AssociativeOperation{Op, T}(arguments)
 AssociativeOperation{Op}(arguments::Expression...) where Op = AssociativeOperation{Op, unionise(arguments)}(collect(arguments))
 
 args(operation::AssociativeOperation) = operation.arguments
