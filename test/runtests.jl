@@ -1,6 +1,8 @@
 using Algebra
 using Test
 
-@testset "Algebra.jl" begin
-    # Write your tests here.
+@testset "Algebra" begin
+    @testset "utiltests.jl" begin
+        include("utiltests.jl")
+    end
 end

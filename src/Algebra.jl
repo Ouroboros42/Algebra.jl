@@ -1,12 +1,24 @@
 module Algebra
 
-__precompile__(false)
-include("./core/Redef.jl")
-include("./core/util.jl")
-include("./expressions/Expression.jl")
-include("./expressions/Variable.jl")
-include("./expressions/compound.jl")
-include("./simplify/simplify.jl")
-include("./simplify/associative.jl")
+using Logging
+
+include("util/typing.jl")
+include("util/nullable.jl")
+include("util/iterating.jl")
+include("expressions/Expression.jl")
+include("expressions/Literal.jl")
+include("expressions/Variable.jl")
+include("expressions/compound/CompoundExpression.jl")
+include("expressions/compound/associative/AssociativeExpression.jl")
+include("expressions/valuetypes.jl")
+include("simplify/Simplifier.jl")
+include("simplify/standard.jl")
+include("simplify/associative.jl")
+include("simplify/literals.jl")
+include("simplify/multiples.jl")
+include("interface/operations.jl")
+include("interface/constants.jl")
+include("interface/conversions.jl")
+include("interface/variables.jl")
 
 end

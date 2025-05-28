@@ -1,0 +1,1 @@
+isinst(::Type{T}) where T = val -> val isa T
