@@ -1,7 +1,8 @@
-export Expression, valuetype
+export Expression
 export Literal
 
 import Base: isless, isequal
+import Base: valtype
 import Base: print, show
 
 """
@@ -9,7 +10,9 @@ Base type for all algebraic expressions.
 """
 abstract type Expression{T} end
 
-valuetype(::Expression{T}) where T = T
+valtype(::Type{E}) where {T, E <: Expression{T}} = T
+valtype(::Type{E}) where {E <: Expression} = nothing
+valtype(::Expression{T}) where T = T
 
 """Expression subclasses need only implement ordering withing themselves, differernt-type ordering is automatic."""
 isless(::E1, ::E2) where {E1 <: Expression, E2 <: Expression} = isless(objectid(E1), objectid(E2))
