@@ -6,15 +6,15 @@ import Combinat: Combinations
 Override for types which can be combined together under the given operation."""
 trycombine(simplifier::Simplifier, Op, ::Expression, ::Expression) = nothing
 
-toargs(::AssociativeOperation{Op}, expr::Expression) where Op = [ expr ]
-toargs(::AssociativeOperation{Op}, expr::AssociativeOperation{Op}) where Op = expr.arguments
+toargs(::Associative, expr::Expression) = [ expr ]
+toargs(::Associative{Op}, expr::Associative{Op}) where Op = expr.arguments
 toargs(op) = expr -> toargs(op, expr) 
 
-function flatten(operation::AssociativeOperation{Op}) where Op
-    AssociativeOperation{Op}(collect(Iterators.flatmap(toargs(operation), args(operation))))
+function flatten(operation::Associative)
+    sameop(operation, collect(Iterators.flatmap(toargs(operation), args(operation))))
 end
 
-function trysimplify(operation::AssociativeOperation{Op}, simplifier::Simplifier) where Op
+function trysimplify(operation::Associative{Op}, simplifier::Simplifier) where Op
     opargs = args(operation)
 
     iter_pairs = iscommutative(operation) ? Combinations(ienumerate(opargs), 2) : adjacent(ienumerate(opargs))
@@ -29,14 +29,14 @@ function trysimplify(operation::AssociativeOperation{Op}, simplifier::Simplifier
 
             new_args = new_type[ opargs[begin:i1-1]; combined; opargs[i1+1:i2-1]; opargs[i2+1:end] ]
 
-            return AssociativeOperation{Op}(new_args)
+            return Associative{Op}(new_args)
         end
     end
 end
 
-function trysimplify(operation::AssociativeOperation{Op}, simplifier::Trivial) where Op
+function trysimplify(operation::Associative{Op}, simplifier::Trivial) where Op
     if isempty(args(operation))
-        @tryreturn opidentity(operation)
+        throw(EmptyOperationError{Op}())
     end
 
     @tryreturn onlyornothing(args(operation))
@@ -46,16 +46,16 @@ function trysimplify(operation::AssociativeOperation{Op}, simplifier::Trivial) w
     end
 
     if hasidentity(operation) && any(isidentity(operation), args(operation))
-        return AssociativeOperation{Op}(filter(!isidentity(operation), args(operation))) 
+        return Associative{Op}(filter(!isidentity(operation), args(operation))) 
     end
     
     @tryreturn @invoke trysimplify(operation, simplifier::Simplifier)
 
-    if any(isinst(AssociativeOperation{Op}), args(operation))
+    if any(isinst(Associative{Op}), args(operation))
         return flatten(operation)
     end
     
     if iscommutative(operation) && !issorted(args(operation))
-        return AssociativeOperation{Op}(sort(args(operation)))
+        return Associative{Op}(sort(args(operation)))
     end
 end

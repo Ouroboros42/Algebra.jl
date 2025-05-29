@@ -14,22 +14,22 @@ function trycombine(::MergeSame, ::typeof(+), expr1::Expression, expr2::Expressi
     end
 end
 
-function trycombine(simplifier::Simplifier, Op, operation::A, single::Expression) where {AOp, A <: AssociativeOperation{AOp}}
-    trycombine(simplifier, Op, operation, AssociativeOperation{AOp}(single))
+function trycombine(simplifier::Simplifier, Op, operation::A, single::Expression) where {AOp, A <: Associative{AOp}}
+    trycombine(simplifier, Op, operation, Associative{AOp}(single))
 end
 
-function trycombine(simplifier::Simplifier, Op, single::Expression, operation::A) where {AOp, A <: AssociativeOperation{AOp}}
-    trycombine(simplifier, Op, AssociativeOperation{AOp}(single), operation)
+function trycombine(simplifier::Simplifier, Op, single::Expression, operation::A) where {AOp, A <: Associative{AOp}}
+    trycombine(simplifier, Op, Associative{AOp}(single), operation)
 end
 
-trycombine(simplifier::Simplifier, Op, op1::A1, op2::A2) where {AOp, A1 <: AssociativeOperation{AOp}, A2 <: AssociativeOperation{AOp}} = @invoke trycombine(simplifier, Op, op1::Expression, op2::Expression)
-function trycombine(simplifier::Simplifier, Op, op1::AssociativeOperation, op2::AssociativeOperation)
+trycombine(simplifier::Simplifier, Op, op1::A1, op2::A2) where {AOp, A1 <: Associative{AOp}, A2 <: Associative{AOp}} = @invoke trycombine(simplifier, Op, op1::Expression, op2::Expression)
+function trycombine(simplifier::Simplifier, Op, op1::Associative, op2::Associative)
     @tryreturn @invoke trycombine(simplifier, Op, op1, op2::Expression)
     @tryreturn @invoke trycombine(simplifier, Op, op1::Expression, op2)
 end
 
-trycombine(simplifier::MergeSame, Op::typeof(+), operation::A, single::Expression) where {A <: AssociativeOperation} = @invoke trycombine(simplifier::Simplifier, Op, operation, single) 
-trycombine(simplifier::MergeSame, Op::typeof(+), single::Expression, operation::A) where {A <: AssociativeOperation} = @invoke trycombine(simplifier::Simplifier, Op, single, operation) 
+trycombine(simplifier::MergeSame, Op::typeof(+), operation::A, single::Expression) where {A <: Associative} = @invoke trycombine(simplifier::Simplifier, Op, operation, single) 
+trycombine(simplifier::MergeSame, Op::typeof(+), single::Expression, operation::A) where {A <: Associative} = @invoke trycombine(simplifier::Simplifier, Op, single, operation) 
 
 function trycombine(simplifier::Simplifier, ::typeof(+), prod1::Prod, prod2::Prod)
     @tryreturn mapsome(Prod, map_single_difference((x, y) -> trycombine(simplifier, +, x, y), args(prod1), args(prod2)))

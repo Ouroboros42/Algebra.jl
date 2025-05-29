@@ -17,8 +17,8 @@ hasidentity(Op) = false
 hasidentity(::Sum) = true
 hasidentity(::Prod) = true
 
-isidentity(::AssociativeOperation, ::Expression) = false
-isidentity(operation::AssociativeOperation) = element -> isidentity(operation, element)
+isidentity(::Associative, ::Expression) = false
+isidentity(operation::Associative) = element -> isidentity(operation, element)
 
 isidentity(::Sum, element::Expression) = iszero(element)
 isidentity(::Prod, element::Expression) = isone(element)

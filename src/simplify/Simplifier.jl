@@ -1,5 +1,3 @@
-export simplify, NoSimplify, Trivial
-
 abstract type Simplifier end
 
 simplifywith(simplifiers...) = expression -> simplify(expression, simplifiers...)

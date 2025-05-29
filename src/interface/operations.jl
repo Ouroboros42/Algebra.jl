@@ -7,7 +7,7 @@ macro implement_algebraic_op(OP)
     OP = esc(OP)
 
     quote
-        ($OP)(args::Expression...) = simplify(AssociativeOperation{$OP}(args...))
+        ($OP)(args::Expression...) = simplify(Associative{$OP}(args...))
 
         ($OP)(expr::Expression, value) = ($OP)(expr, convert(Expression, value))
         ($OP)(value, expr::Expression) = ($OP)(convert(Expression, value), expr)
