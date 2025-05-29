@@ -1,3 +1,5 @@
+using Algebra: Literal
+
 @testset "Type Conversion" begin
     @test isequal(convert(Expression, 1), Literal(1))
     @test isequal(convert(Expression, Literal(1)), Literal(1))

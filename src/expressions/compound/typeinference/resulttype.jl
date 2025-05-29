@@ -3,7 +3,9 @@
 
 Implement to determine the result of applying the given Op to the given expressions.
 """
-function resulttype end
+function resulttype(Op, T1, T2)
+    throw(ResultTypeUndefinedError{Op}(T1, T2))
+end
 
 resulttype(Op) = (T1, T2) -> resulttype(Op, T1, T2)
 isclosed(Op, T) = resulttype(Op, T, T) <: T

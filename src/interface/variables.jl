@@ -1,5 +1,3 @@
-export @var
-
 const TYPE_SHORTHANDS = Dict(
     :R => :Real,
     :C => :Complex,

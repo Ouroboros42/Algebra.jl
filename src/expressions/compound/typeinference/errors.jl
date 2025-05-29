@@ -2,11 +2,11 @@ import Base.showerror
 
 abstract type ResultInferenceError <: Exception end
 
-struct ResultTypeUndefinedError{Outer <: CompoundExpression, Args} <: ResultInferenceError
+struct ResultTypeUndefinedError{Outer <: CompoundExpression, Args <: Tuple} <: ResultInferenceError
     args::Args
 end
 
-ResultTypeUndefinedError{Outer}(args::Args) where {Outer, Args} = ResultTypeUndefinedError{Outer, Args}(args) 
+ResultTypeUndefinedError{Outer}(args...) where Outer = ResultTypeUndefinedError{Outer, typeof(args)}(args) 
 
 struct EmptyOperationError{Op} <: ResultInferenceError end
 

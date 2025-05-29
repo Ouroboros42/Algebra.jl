@@ -6,7 +6,7 @@ Evaluate if the given type accepts multiplication with integers, for simplifying
 supportsintmul(::Type{E}) where {T, E <: Expression{T}} = !isnothing(resulttype(*, Int8, T))
 supportsintmul(::E) where {E <: Expression} = supportsintmul(E)
 
-LITERAL_TWO = Literal(Int8(2))
+const LITERAL_TWO = Literal(Int8(2))
 
 function trycombine(::MergeSame, ::typeof(+), expr1::Expression, expr2::Expression)
     if supportsintmul(expr1) && isequal(expr1, expr2)

@@ -1,11 +1,11 @@
 @testset "adjacent" begin
-    import Algebra.adjacent
+    using Algebra: adjacent
 
     @test [(1, 2), (2, 3), (3, 4), (4, 5)] == collect(adjacent(1:5))
 end
 
 @testset "single_difference" begin
-    import Algebra.map_single_difference
+    using Algebra: map_single_difference
 
     @test isnothing(map_single_difference((x, y) -> x, [1, 2, 3], [1, 2]))
     @test isnothing(map_single_difference((x, y) -> x, [1, 2, 3], [1, 2, 3]))
@@ -15,7 +15,7 @@ end
 end
 
 @testset "map_one_extra" begin
-    import Algebra.map_one_extra
+    using Algebra: map_one_extra
 
     @test [1, 2, 9] == map_one_extra(x -> x - 1, [1, 2, 10], [1, 2])
     @test [1, 2, 11] == map_one_extra(x -> x + 1, [1, 2], [1, 2, 10])
