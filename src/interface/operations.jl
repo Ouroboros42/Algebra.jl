@@ -1,4 +1,7 @@
+import Base.promote_rule
 import Base: +, *
+
+promote_rule(::Type{<:Expression}, ::Type) = Expression
 
 macro implement_algebraic_op(OP)
     OP = esc(OP)
