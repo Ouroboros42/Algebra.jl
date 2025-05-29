@@ -1,10 +1,10 @@
 # Core interface
-export @var, Variable
+export @var, Variable, Literal
 export simplify
 
 # Expressions types - ideally rarely needed
 export Expression
-export Sum, Prod, Literal
+export Sum, Prod, Pow
 
 # Simplifiers
 export NoSimplify, Trivial

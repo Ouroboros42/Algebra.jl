@@ -11,7 +11,7 @@ toargs(::Associative{Op}, expr::Associative{Op}) where Op = expr.arguments
 toargs(op) = expr -> toargs(op, expr) 
 
 function flatten(operation::Associative)
-    sameop(operation, collect(Iterators.flatmap(toargs(operation), args(operation))))
+    similar(operation, collect(Iterators.flatmap(toargs(operation), args(operation))))
 end
 
 function trysimplify(operation::Associative{Op}, simplifier::Simplifier) where Op

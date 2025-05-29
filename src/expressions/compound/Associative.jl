@@ -1,3 +1,5 @@
+import Base: similar
+
 """
 An associative operation, labelled by `Op`, which is usually the equivalent julia function. 
 """
@@ -9,11 +11,9 @@ Associative{Op, T}(arguments::Vector{E}) where {Op, T, E} = Associative{Op, T, E
 
 Associative{Op}(arguments::Vector{<:Expression}) where Op = Associative{Op, resulttype(Op, arguments)}(arguments)
 Associative{Op}(arguments::Expression...) where Op = Associative{Op, resulttype(Op, arguments)}(collect(arguments))
-sameop(::Associative{Op}, arguments...) where Op = Associative{Op}(arguments...)
 
+similar(::Associative{Op}, arguments...) where Op = Associative{Op}(arguments...)
 args(operation::Associative) = operation.arguments
-
-map(f, operation::Associative) = sameop(operation, map(f, args(operation)))
 
 iscommutative(::Type{A}) where {A <: Associative} = false
 iscommutative(::A) where {A <: Associative} = iscommutative(A)
