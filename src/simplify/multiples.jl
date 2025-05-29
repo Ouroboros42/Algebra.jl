@@ -1,11 +1,16 @@
-supportsintmul(::Type{E}) where {E <: Expression} = false
+"""
+    supportsintmul(::Type{E}) where {T, E <: Expression{T}}
+
+Evaluate if the given type accepts multiplication with integers, for simplifying sums.
+"""
+supportsintmul(::Type{E}) where {T, E <: Expression{T}} = !isnothing(resulttype(*, Int8, T))
 supportsintmul(::E) where {E <: Expression} = supportsintmul(E)
 
-supportsintmul(::Type{E}) where {E <: Expression{<:CLinear}} = true
+LITERAL_TWO = Literal(Int8(2))
 
 function trycombine(::MergeSame, ::typeof(+), expr1::Expression, expr2::Expression)
     if supportsintmul(expr1) && isequal(expr1, expr2)
-        return 2 * expr1
+        return LITERAL_TWO * expr1
     end
 end
 

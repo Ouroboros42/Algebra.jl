@@ -1,5 +1,3 @@
-export AssociativeOperation, Sum, Prod
-
 """
 An associative operation, labelled by `Op`, which is usually the equivalent julia function. 
 """
@@ -39,3 +37,5 @@ end
 
 const Sum = AssociativeOperation{+}
 const Prod = AssociativeOperation{*}
+
+const RingOps = Union{typeof(+), typeof(*)}

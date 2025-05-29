@@ -1,6 +1,3 @@
-export Expression
-export Literal
-
 import Base: isless, isequal
 import Base: valtype
 import Base: print, show

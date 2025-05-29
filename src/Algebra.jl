@@ -23,6 +23,5 @@ include("interface/operations.jl")
 include("interface/constants.jl")
 include("interface/conversions.jl")
 include("interface/variables.jl")
-include("interface/display.jl")
 
 end

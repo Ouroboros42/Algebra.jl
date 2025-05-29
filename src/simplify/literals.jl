@@ -1,21 +1,19 @@
-import ..Algebra
+acts_exactly(Op, value1, value2) = false
 
-macro implement_literal_op(Op, T1, T2 = T1, valueOp = Op)    
-    return quote
-        function Algebra.trycombine(::Trivial, ::typeof($(esc(Op))), literal1::Literal{<:$(esc(T1))}, literal2::Literal{<:$(esc(T2))})
-            combined_value = $(esc(valueOp))(literal1.value, literal2.value)
+const ExactRingNumbers = Union{Integer, Rational}
 
-            Literal(combined_value)
-        end
+acts_exactly(Op::RingOps, value1::ExactRingNumbers, value2::ExactRingNumbers) = true
+
+"""
+    apply(Op, value1, value2)
+
+Computed value of `Op` applied to `value1` and `value2`.
+Default is to call `(Op)(value1, value2)`. Overload for other behaviour. 
+"""
+apply(Op, value1, value2) = (Op)(value1, value2)
+
+function trycombine(::Trivial, Op, literal1::Literal, literal2::Literal)
+    if acts_exactly(Op, literal1.value, literal2.value)
+        return Literal(apply(Op, literal1.value, literal2.value))
     end
 end
-
-# macro implement_symmetric_literal_op(Op, T1, T2, valueOp = Op)    
-#     return quote
-#         @implement_literal_op($(esc(Op)), $(esc(T1)), $(esc(T2)), $(esc(valueOp)))
-#         @implement_literal_op($(esc(Op)), $(esc(T2)), $(esc(T1)), $(esc(valueOp)))
-#     end
-# end
-
-@implement_literal_op(+, CLinear)
-@implement_literal_op(*, CLinear)

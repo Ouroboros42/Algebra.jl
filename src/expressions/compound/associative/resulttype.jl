@@ -1,5 +1,3 @@
-
-
 """
     resulttype(Op, T1, T2)
 
