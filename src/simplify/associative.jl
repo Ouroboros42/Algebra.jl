@@ -1,5 +1,11 @@
 import Combinat: Combinations
 
+"""
+    trycombine(simplifier::Simplifier, Op, expression1::Expression, expression2::Expression)
+
+Override for types which can be combined together under the given operation."""
+trycombine(simplifier::Simplifier, Op, ::Expression, ::Expression) = nothing
+
 toargs(::AssociativeOperation{Op}, expr::Expression) where Op = [ expr ]
 toargs(::AssociativeOperation{Op}, expr::AssociativeOperation{Op}) where Op = expr.arguments
 toargs(op) = expr -> toargs(op, expr) 
@@ -33,8 +39,14 @@ function trysimplify(operation::AssociativeOperation{Op}, simplifier::Trivial) w
         @tryreturn opidentity(operation)
     end
 
-    if length(args(operation)) == 1
-        return only(args(operation))
+    @tryreturn onlyornothing(args(operation))
+
+    if operation isa Prod
+        @tryreturn firstornothing(iszero, args(operation))
+    end
+
+    if hasidentity(operation) && any(isidentity(operation), args(operation))
+        return AssociativeOperation{Op}(filter(!isidentity(operation), args(operation))) 
     end
     
     @tryreturn @invoke trysimplify(operation, simplifier::Simplifier)

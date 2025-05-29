@@ -12,6 +12,8 @@ AssociativeOperation{Op}(arguments::Expression...) where Op = AssociativeOperati
 
 args(operation::AssociativeOperation) = operation.arguments
 
+map(f, operation::AssociativeOperation{Op}) where Op = AssociativeOperation{Op}(map(f, args(operation)))
+
 opidentity(::Type{A}) where {A <: AssociativeOperation} = nothing
 opidentity(::A) where {A <: AssociativeOperation} = opidentity(A)
 

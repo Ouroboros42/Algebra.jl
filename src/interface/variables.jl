@@ -3,6 +3,7 @@ const TYPE_SHORTHANDS = Dict(
     :C => :Complex,
     :Z => :Signed,
     :N => :Unsigned,
+    :Q => :Rational
 )
 
 macro var(name::QuoteNode, type = :Real, equality_by_name = :true)

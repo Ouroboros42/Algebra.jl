@@ -20,3 +20,7 @@ end
 
 mapsome(f, ::Nothing) = nothing
 mapsome(f, arg) = f(arg)
+
+onlyornothing(collection) = isone(length(collection)) ? only(collection) : nothing
+firstornothing(collection) = onlyornothing(first(collection, 1))
+firstornothing(f, collection) = firstornothing(Iterators.filter(f, collection))

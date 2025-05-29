@@ -10,7 +10,7 @@ const LITERAL_TWO = Literal(Int8(2))
 
 function trycombine(::MergeSame, ::typeof(+), expr1::Expression, expr2::Expression)
     if supportsintmul(expr1) && isequal(expr1, expr2)
-        return LITERAL_TWO * expr1
+        return Prod(LITERAL_TWO, expr1)
     end
 end
 

@@ -1,5 +1,7 @@
 import Base: convert
 
+express(value) = convert(Expression, value)
+
 convert(::Type{T}, literal::Literal{<:T}) where T = literal.value
 
 convert(::Type{>:Literal{T}}, value::T) where T = Literal(value)

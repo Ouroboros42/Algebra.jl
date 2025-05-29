@@ -2,8 +2,16 @@ export simplify, NoSimplify, Trivial
 
 abstract type Simplifier end
 
-trysimplify(::Expression, ::Simplifier) = nothing
+simplifywith(simplifiers...) = expression -> simplify(expression, simplifiers...)
 
+simplify(expression::Expression, simplifiers::Simplifier...) = simplify(expression, simplifiers)
+
+"""
+    simplify(expression::Expression, simplifiers::NTuple{N, Simplifier}) where N
+
+Apply specified simplification schemes to the Expression until it can be updated no more.
+Should not need overriding, override `trysimplify`` instead.
+"""
 function simplify(expression::Expression, simplifiers::NTuple{N, Simplifier}) where N
     for simplifier in simplifiers
         @debug "Applying $simplifier to $expression"
@@ -17,7 +25,5 @@ function simplify(expression::Expression, simplifiers::NTuple{N, Simplifier}) wh
     expression
 end
 
-simplify(expression::Expression, simplifiers::Simplifier...) = simplify(expression, simplifiers)
+trysimplify(::Expression, ::Simplifier) = nothing
 
-"""Override for types which can be combined together under the given operation - only targets adjacent items."""
-trycombine(simplifier::Simplifier, Op, ::Expression, ::Expression) = nothing

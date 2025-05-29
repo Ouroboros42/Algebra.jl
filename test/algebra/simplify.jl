@@ -1,5 +1,5 @@
-@var x Real
-@var z Complex
+@var x R
+@var z C
 
 @testset "associative" begin
     @test isequal((x + 1) + z, x + (1 + z))
@@ -13,4 +13,9 @@ end
 
 @testset "constants combine" begin
     @test isequal(x + z + 3, x + 2 + z + 1)
+    @test isequal(x + π + z + 1, Sum(sort([x, z, Literal(π), Literal(1)])))
+end
+
+@testset "compound" begin
+    @test isequal(simplify(Prod(y, Sum(2x, 2x))), 4x*y)
 end

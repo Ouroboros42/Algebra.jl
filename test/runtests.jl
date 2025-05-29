@@ -2,16 +2,20 @@ using Algebra
 using Test
 using Glob
 
+function test_directory(dirpath)
+    for testfile in glob("$dirpath/*.jl")
+        @testset "$testfile" begin
+            include(testfile)
+        end
+    end
+end
+
 @testset "Algebra" begin
-    @testset "utiltests.jl" begin
-        include("utiltests.jl")
+    @testset "util tests" begin
+        test_directory("util")
     end
 
     @testset "algebra tests" begin
-        for testfile in glob("algebra/*.jl")
-            @testset "$testfile" begin
-                include(testfile)
-            end
-        end
+        test_directory("algebra")
     end
 end

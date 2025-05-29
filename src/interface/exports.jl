@@ -1,3 +1,4 @@
-export Expression
-
+export Expression, Literal
 export @var, Variable
+
+export Sum, Prod

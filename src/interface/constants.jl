@@ -4,8 +4,8 @@ macro implement_algebraic_const(getconst)
     getconst = esc(getconst)
 
     quote
-        $getconst(::Type{E}) where {T, E <: Expression{T}} = convert(Expression, $getconst(T))
-        $getconst(::E) where {E <: Expression} = $getconst(E)
+        ($getconst)(::Type{E}) where {T, E <: Expression{T}} = convert(Expression, ($getconst)(T))
+        ($getconst)(::E) where {E <: Expression} = ($getconst)(E)
     end
 end
 
