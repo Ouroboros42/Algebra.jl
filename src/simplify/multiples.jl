@@ -1,8 +1,5 @@
-supportsintmul(::Type{E}) where {T, E <: Expression{T}} = !isnothing(assoc_valtype(*, Int8, T))
-supportsintmul(::E) where {E <: Expression} = supportsintmul(E)
-
 function trycombine(::MergeSame, ::typeof(+), expr1::Expression, expr2::Expression)
-    if supportsintmul(expr1) && isequal(expr1, expr2)
+    if assoc_valid(*, TWO, expr1) && isequal(expr1, expr2)
         return Prod(TWO, expr1)
     end
 end

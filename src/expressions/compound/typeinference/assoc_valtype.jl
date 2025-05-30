@@ -3,8 +3,10 @@
 
 Implement to determine the result of applying the given the associative `Op` to expressions of type `T1`, `T2`.
 """
-assoc_valtype(Op, T1, T2) = throw(ResultTypeUndefinedError{Op}(T1, T2))
+assoc_valtype(Op, T1, T2) = throw(ResultTypeUndefinedError{Associative{Op}}(T1, T2))
 assoc_valtype(Op) = (T1, T2) -> assoc_valtype(Op, T1, T2)
+
+assoc_valid(args...) = !isnothing(assoc_valtype(args...))
 
 isclosed(Op, T) = assoc_valtype(Op, T, T) <: T
 

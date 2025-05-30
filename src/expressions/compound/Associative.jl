@@ -1,5 +1,3 @@
-import Base: similar
-
 """
 An associative operation, labelled by `Op`, which is usually the equivalent julia function. 
 """

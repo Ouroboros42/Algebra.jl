@@ -1,18 +1,33 @@
-import Base.promote_rule
-import Base: +, *
+import Base: +, *, ^
 
-promote_rule(::Type{<:Expression}, ::Type) = Expression
-
-macro implement_algebraic_op(OP)
-    OP = esc(OP)
+macro implement_binary_op(Optype, opfun)
+    Optype = esc(Optype)
+    opfun = esc(opfun)
 
     quote
-        ($OP)(args::Expression...) = simplify(Associative{$OP}(args...))
+        $opfun(args::Expression...) = simplify($Optype(args...))
 
-        ($OP)(expr::Expression, value) = ($OP)(expr, convert(Expression, value))
-        ($OP)(value, expr::Expression) = ($OP)(convert(Expression, value), expr)
+        $opfun(expr::Expression, value) = $opfun(expr, convert(Expression, value))
+        $opfun(value, expr::Expression) = $opfun(convert(Expression, value), expr)
     end
 end
 
-@implement_algebraic_op(+)
-@implement_algebraic_op(*)
+macro implement_assoc_op(opfun)
+    opfun = esc(opfun)
+
+    quote
+        @implement_binary_op(Associative{$opfun}, $opfun)
+    end
+end
+
+macro implement_binary_op(opfun)
+    opfun = esc(opfun)
+
+    quote
+        @implement_binary_op(NFunc{$opfun, 2}, $opfun)
+    end
+end
+
+@implement_assoc_op(+)
+@implement_assoc_op(*)
+@implement_binary_op(^)
