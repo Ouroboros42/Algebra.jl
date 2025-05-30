@@ -27,14 +27,7 @@ function print(io::IO, (; arguments)::Associative{Op}) where Op
         return print(io, "`EMPTY $Op`")
     end
 
-    firstexpr, rest = Iterators.peel(arguments)
+    args = join(map(string, arguments), " $Op ")
 
-    print(io, "(")
-
-    print(io, firstexpr)
-    for expr in rest
-        print(io, " $Op $expr")
-    end
-
-    print(io, ")")
+    print(io, "($args)")
 end

@@ -1,15 +1,24 @@
+import Base: iterate
+
 struct Literal{T} <: Expression{T}
     value::T
 end
 
+value(literal::Literal) = literal.value
+
 isequal(first::Literal, second::Literal) = first.value == second.value
 isless(first::Literal, second::Literal) = isless(first.value, second.value)
+
+isinteger(literal::Literal) = isinteger(literal.value)
 
 print(io::IO, literal::Literal) = print(io, literal.value)
 function show(io::IO, ::MIME"text/plain", literal::Literal)
     print(io, "Literal ")
     show(io, MIME("text/plain"), literal.value)
 end
+
+iterate(literal::Literal) = (literal.value, nothing)
+iterate(literal::Literal, state) = nothing
 
 const NEG = Literal(Int8(-1))
 const ZERO = Literal(UInt8(0))

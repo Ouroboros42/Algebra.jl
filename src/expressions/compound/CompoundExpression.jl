@@ -1,4 +1,4 @@
-import Base: map, similar
+import Base: map, similar, iterate
 
 """
 Base for all expressions containing sub-expressions.
@@ -13,3 +13,6 @@ isequal(first::C, second::C) where {C <: CompoundExpression} = isequal(args(firs
 isless(first::C, second::C) where {C <: CompoundExpression} = isless(args(first), args(second))
 
 map(f, compound::CompoundExpression) = similar(compound, map(f, args(compound)))
+
+iterate(compound::CompoundExpression) = iterate(args(compound))
+iterate(compound::CompoundExpression, state) = iterate(args(compound), state)
