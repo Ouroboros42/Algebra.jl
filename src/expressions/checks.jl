@@ -13,3 +13,4 @@ end
 @implement_constcheck(isone)
 
 isinteger(expression::Expression) = valtype(expression) <: Integer
+isinteger(literal::Literal) = isinteger(literal.value)

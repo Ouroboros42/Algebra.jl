@@ -1,4 +1,4 @@
-import Base: iterate
+import Base: iterate, isinteger
 
 struct Literal{T} <: Expression{T}
     value::T
@@ -8,8 +8,6 @@ value(literal::Literal) = literal.value
 
 isequal(first::Literal, second::Literal) = first.value == second.value
 isless(first::Literal, second::Literal) = isless(first.value, second.value)
-
-isinteger(literal::Literal) = isinteger(literal.value)
 
 print(io::IO, literal::Literal) = print(io, literal.value)
 function show(io::IO, ::MIME"text/plain", literal::Literal)
