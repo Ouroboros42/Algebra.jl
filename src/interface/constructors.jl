@@ -1,2 +1,2 @@
-(::Type{A})(arguments...) where {A <: Associative} = A(map(express, arguments)...)
-# (::Type{F})(arguments...) where {F <: NFunc} = F(map(express, arguments)...)
+(A::Type{<:Associative})(arguments...) = A(map(express, arguments)...)
+(F::Type{<:NFunc})(arguments...) = F(map(express, arguments)...)

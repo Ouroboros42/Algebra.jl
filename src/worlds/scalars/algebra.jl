@@ -4,5 +4,5 @@ const CArray = Array{<:LogicalComplex}
 
 const CLinear = Union{LogicalComplex, CArray}
 
-iscommutative(::Type{S}) where {S <: Sum{<:CLinear}} = true
-iscommutative(::Type{P}) where {P <: Prod{<:LogicalComplex}} = true
+iscommutative(::Type{<:Sum{<:CLinear}}) = true
+iscommutative(::Type{<:Prod{<:LogicalComplex}}) = true

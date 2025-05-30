@@ -7,8 +7,8 @@ macro implement_binary_op(Optype, opfun)
     quote
         $opfun(args::Expression...) = simplify($Optype(args...))
 
-        $opfun(expr::Expression, value) = $opfun(expr, convert(Expression, value))
-        $opfun(value, expr::Expression) = $opfun(convert(Expression, value), expr)
+        $opfun(expr::Expression, value) = $opfun(expr, express(value))
+        $opfun(value, expr::Expression) = $opfun(express(value), expr)
     end
 end
 

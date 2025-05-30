@@ -13,12 +13,12 @@ Associative{Op}(arguments::Expression...) where Op = Associative{Op, assoc_valty
 similar(::Associative{Op}, arguments...) where Op = Associative{Op}(arguments...)
 args(operation::Associative) = operation.arguments
 
-iscommutative(::Type{A}) where {A <: Associative} = false
+iscommutative(::Type{<:Associative}) = false
 iscommutative(::A) where {A <: Associative} = iscommutative(A)
 
 hasidentity(Op) = false
 
-isidentity(::Type{A}, ::Expression) where {A <: Associative} = false
+isidentity(::Type{<:Associative}, ::Expression) = false
 isidentity(::A, expression::Expression) where {A <: Associative} = isidentity(A, expression)
 isidentity(operation::Associative) = element -> isidentity(operation, element)
 

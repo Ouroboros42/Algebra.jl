@@ -14,7 +14,7 @@ similar(::NFunc{Op, N}, arguments...) where {Op, N} = NFunc{Op, N}(arguments...)
 args(func::NFunc) = func.arguments
 arg(func::NFunc{Op, 1}) where Op = only(args(func))
 
-iscommutative(::Type{F}) where {F <: NFunc} = false
+iscommutative(::Type{<:NFunc}) = false
 iscommutative(::F) where {F <: NFunc} = iscommutative(F)
 
 function print(io::IO, (; arguments)::NFunc{Op}) where Op
