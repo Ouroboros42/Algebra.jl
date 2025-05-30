@@ -1,5 +1,10 @@
 import Base: iszero, isone
 
+const Sum = Associative{+}
+const Prod = Associative{*}
+
+const RingOps = Union{typeof(+), typeof(*)}
+
 macro implement_constcheck(constcheck)
     constcheck = esc(constcheck)
 
@@ -12,13 +17,8 @@ end
 @implement_constcheck(iszero)
 @implement_constcheck(isone)
 
-hasidentity(Op) = false
-
 hasidentity(::Sum) = true
 hasidentity(::Prod) = true
-
-isidentity(::Associative, ::Expression) = false
-isidentity(operation::Associative) = element -> isidentity(operation, element)
 
 isidentity(::Sum, element::Expression) = iszero(element)
 isidentity(::Prod, element::Expression) = isone(element)

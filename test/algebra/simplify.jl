@@ -17,5 +17,5 @@ end
 end
 
 @testset "compound" begin
-    @test isequal(simplify(Prod(y, Sum(2x, 2x))), 4x*y)
+    @test isequal(simplify(Prod(z, Sum(2x, 2x))), 4x*z)
 end

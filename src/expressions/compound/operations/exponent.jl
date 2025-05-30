@@ -1,0 +1,1 @@
+const Pow = NFunc{^, 2}

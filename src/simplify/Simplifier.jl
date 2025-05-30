@@ -12,10 +12,11 @@ Should not need overriding, override `trysimplify`` instead.
 """
 function simplify(expression::Expression, simplifiers::NTuple{N, Simplifier}) where N
     for simplifier in simplifiers
-        @debug "Applying $simplifier to $expression"
         maybe_simplified = trysimplify(expression, simplifier)
 
         if !isnothing(maybe_simplified)
+            @debug "$simplifier simplified $(repr(expression)) to $(repr(maybe_simplified))"
+
             return simplify(maybe_simplified, simplifiers)
         end
     end

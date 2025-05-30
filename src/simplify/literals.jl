@@ -14,6 +14,10 @@ apply(Op, value1, value2) = (Op)(value1, value2)
 
 function trycombine(::Trivial, Op, literal1::Literal, literal2::Literal)
     if acts_exactly(Op, literal1.value, literal2.value)
-        return Literal(apply(Op, literal1.value, literal2.value))
+        newvalue = apply(Op, literal1.value, literal2.value)
+
+        @debug "$Op($(literal1.value), $(literal2.value)) = $(newvalue)"
+
+        return Literal(newvalue)
     end
 end

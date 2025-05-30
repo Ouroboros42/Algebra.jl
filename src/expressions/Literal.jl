@@ -10,3 +10,8 @@ function show(io::IO, ::MIME"text/plain", literal::Literal)
     print(io, "Literal ")
     show(io, MIME("text/plain"), literal.value)
 end
+
+const NEG = Literal(Int8(-1))
+const ZERO = Literal(UInt8(0))
+const ONE = Literal(UInt8(1))
+const TWO = Literal(UInt8(2))

@@ -24,7 +24,7 @@ function trysimplify(operation::Associative{Op}, simplifier::Simplifier) where O
 
         if !isnothing(combined)
             @debug "Combined $Op($expr1, $expr2) -> $combined"
-        
+
             new_type = Union{eltype(opargs), typeof(combined)}
 
             new_args = new_type[ opargs[begin:i1-1]; combined; opargs[i1+1:i2-1]; opargs[i2+1:end] ]

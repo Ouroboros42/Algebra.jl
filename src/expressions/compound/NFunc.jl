@@ -8,7 +8,7 @@ struct NFunc{Op, N, T, Args <: NTuple{N, Expression}} <: CompoundExpression{T}
 end
 
 NFunc{Op, N, T}(arguments::Args) where {Op, N, T, Args <: NTuple{N, Expression}} = NFunc{Op, N, T, Args}(arguments)
-NFunc{Op, N}(arguments::NTuple{N, Expression}) where {Op, N} = NFunc{Op, N, resulttype(Op, arguments)}(arguments)
+NFunc{Op, N}(arguments::NTuple{N, Expression}) where {Op, N} = NFunc{Op, N, nfunc_valtype(Op, arguments)}(arguments)
 NFunc{Op, N}(arguments::Expression...) where {Op, N} = NFunc{Op, N}(arguments)
 
 similar(::NFunc{Op}, arguments...) where Op = NFunc{Op}(arguments...)
@@ -33,5 +33,3 @@ function print(io::IO, (; arguments)::NFunc{Op}) where Op
 
     print(io, ")")
 end
-
-const Pow = NFunc{^, 2}

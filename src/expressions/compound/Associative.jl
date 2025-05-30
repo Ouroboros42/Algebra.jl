@@ -9,14 +9,20 @@ end
 
 Associative{Op, T}(arguments::Vector{E}) where {Op, T, E} = Associative{Op, T, E}(arguments)
 
-Associative{Op}(arguments::Vector{<:Expression}) where Op = Associative{Op, resulttype(Op, arguments)}(arguments)
-Associative{Op}(arguments::Expression...) where Op = Associative{Op, resulttype(Op, arguments)}(collect(arguments))
+Associative{Op}(arguments::Vector{<:Expression}) where Op = Associative{Op, assoc_valtype(Op, arguments)}(arguments)
+Associative{Op}(arguments::Expression...) where Op = Associative{Op, assoc_valtype(Op, arguments)}(collect(arguments))
 
 similar(::Associative{Op}, arguments...) where Op = Associative{Op}(arguments...)
 args(operation::Associative) = operation.arguments
 
 iscommutative(::Type{A}) where {A <: Associative} = false
 iscommutative(::A) where {A <: Associative} = iscommutative(A)
+
+hasidentity(Op) = false
+
+isidentity(::Type{A}, ::Expression) where {A <: Associative} = false
+isidentity(::A, expression::Expression) where {A <: Associative} = isidentity(A, expression)
+isidentity(operation::Associative) = element -> isidentity(operation, element)
 
 function print(io::IO, (; arguments)::Associative{Op}) where Op
     if isempty(arguments)
@@ -34,8 +40,3 @@ function print(io::IO, (; arguments)::Associative{Op}) where Op
 
     print(io, ")")
 end
-
-const Sum = Associative{+}
-const Prod = Associative{*}
-
-const RingOps = Union{typeof(+), typeof(*)}
