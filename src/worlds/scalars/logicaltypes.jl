@@ -1,4 +1,4 @@
-const RealExact = Union{Integer, Rational, AbstractIrrational}
+const RealExact = Union{Integer, Rational}
 const ComplexExact = Union{RealExact, Complex{<:RealExact}}
 
 const LogicalInt = Union{Signed, Unsigned}
@@ -9,6 +9,9 @@ inttype(R::Type{<:LogicalRational}) = fieldtype(R, :num)
 const LogicalComplex = Union{Real, Complex}
 realtype(R::Type{<:Real}) = R
 realtype(C::Type{<:Complex}) = fieldtype(C, :re)
+
+realconvert(R, value::Real) = convert(R, value)
+realconvert(R, value::Complex) = convert(Complex{R}, value)
 
 const CVector = Vector{<:LogicalComplex}
 const CMatrix = Matrix{<:LogicalComplex}

@@ -1,45 +1,47 @@
-assoc_exact(Op, value1, value2) = false
-
 """
     apply_assoc(Op, value1, value2)
 
-Computed value of `Op` applied to `value1` and `value2`.
-Default is to call `Op(value1, value2)`. Overload for other behaviour. 
+Evaluate associative `Op` exactly, returns `nothing` if not possible.
 """
-apply_assoc(Op, value1, value2) = Op(value1, value2)
+apply_assoc(Op, value1, value2) = nothing
 
-function trycombine(::Trivial, Op, (value1,)::Literal, (value2,)::Literal)
-    if !assoc_exact(Op, value1, value2); return end
+"""
+    apply_assoc(simplifier::Simplifier, Op, value1, value2)
 
-    newvalue = apply_assoc(Op, value1, value2)
+Evaluate associative `Op` (possibly approximately), according to `simplifier`, returns `nothing` if not possible.
+"""
+apply_assoc(simplifier::Simplifier, Op, value1, value2) = nothing
+apply_assoc(::Trivial, Op, value1, value2) = apply_assoc(Op, value1, value2)
 
-    @debug "$Op($value1, $value2) = $newvalue"
-
-    Literal(newvalue)
+function trycombine(simplifier::Simplifier, Op, (value1,)::Literal, (value2,)::Literal)
+    mapsome(apply_assoc(simplifier, Op, value1, value2)) do newvalue
+        @debug "$simplifier: $Op($value1, $value2) → $newvalue"
+        
+        Literal(newvalue)
+    end
 end
-
-nfunc_exact(Op, values...) = false
 
 """
     apply_nfunc(Op, values...)
 
-Computed value of `Op` applied to `values`.
-Default is to call `Op(values...)`. Overload for other behaviour. 
+Evaluate `Op` exactly, returns `nothing` if not possible.
 """
-apply_nfunc(Op, values...) = Op(values...)
+apply_nfunc(Op, values...) = nothing
 
-function trysimplify(func::NFunc{N, Op, T, <:NTuple{N, Literal}}, ::Trivial) where {N, Op, T}
+"""
+    apply_nfunc(simplifier::Simplifier, Op, values...)
+
+Evaluate `Op` (possibly approximately), according to `simplifier`, returns `nothing` if not possible.
+"""
+apply_nfunc(simplifier::Simplifier, Op, values...) = nothing
+apply_nfunc(::Trivial, Op, values...) = apply_nfunc(Op, values...)
+
+function trysimplify(func::NFunc{N, Op, T, <:NTuple{N, Literal}}, simplifier::Simplifier) where {N, Op, T}
     values = map(value, args(func))
 
-    if !nfunc_exact(Op, values...); return end
+    mapsome(apply_nfunc(simplifier, Op, values...)) do newvalue
+        @debug "$simplifier: $Op$values → $newvalue"
 
-    newvalue = apply_nfunc(Op, values...)
-
-    @debug "$Op$values = $newvalue"
-    
-    if !(newvalue isa T)
-        @error "$(typeof(func)) $func evaluated to $(typeof(newvalue)): $newvalue"
+        Literal(newvalue)
     end
-
-    Literal(newvalue)
 end
