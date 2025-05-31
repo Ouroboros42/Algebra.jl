@@ -13,6 +13,9 @@ Associative{Op}(arguments::Expression...) where Op = Associative{Op, assoc_valty
 similar(::Associative{Op}, arguments...) where Op = Associative{Op}(arguments...)
 args(operation::Associative) = operation.arguments
 
+isequal(first::Associative{Op}, second::Associative{Op}) where Op = isequal(args(first), args(second))
+isless(first::Associative{Op}, second::Associative{Op}) where Op = isless(args(first), args(second))
+
 iscommutative(::Type{<:Associative}) = false
 iscommutative(::A) where {A <: Associative} = iscommutative(A)
 

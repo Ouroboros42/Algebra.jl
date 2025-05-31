@@ -1,5 +1,9 @@
 import Base: exponent
 
+"""
+Expression representing `base^exponent`.
+Complex values are allowed, defined by the standard branch cut in log, to match julia arithmetic.
+"""
 const Pow = NFunc{^, 2}
 
 base(power::Pow) = args(power)[1]

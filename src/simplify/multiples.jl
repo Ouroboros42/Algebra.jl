@@ -11,15 +11,45 @@ function trycombine(::MergeSame, Op::RepeatableOps, expr1::Expression, expr2::Ex
     end
 end
 
-trycombine(simplifier::MergeSame, Op::RepeatableOps, operation::A, single::Expression) where {A <: Associative} = @invoke trycombine(simplifier::Simplifier, Op, operation, single) 
-trycombine(simplifier::MergeSame, Op::RepeatableOps, single::Expression, operation::A) where {A <: Associative} = @invoke trycombine(simplifier::Simplifier, Op, single, operation) 
+trycombine(simplifier::MergeSame, Op::RepeatableOps, operation::Associative, single::Expression) = @invoke trycombine(simplifier::Simplifier, Op, operation, single) 
+trycombine(simplifier::MergeSame, Op::RepeatableOps, single::Expression, operation::Associative) = @invoke trycombine(simplifier::Simplifier, Op, single, operation) 
+function trycombine(simplifier::MergeSame, Op::RepeatableOps, assoc1::Associative{AOp}, assoc2::Associative{AOp}) where AOp
+    @invoke trycombine(simplifier, Op, assoc1::Expression, assoc2::Expression)
+    @invoke trycombine(simplifier::Simplifier, Op, assoc1, assoc2)
+end
 
 function trycombine(simplifier::MergeSame, Op::RepeatableOps, literal1::Literal, literal2::Literal)
     @tryreturn @invoke trycombine(simplifier, Op, literal1::Expression, literal2::Expression)
     @tryreturn @invoke trycombine(simplifier::Simplifier, Op, literal1, literal2)
 end
 
+function trycombine(simplifier::Simplifier, Op::typeof(+), prod1::Prod, prod2::Prod)
+    @tryreturn mapsome(Prod, map_single_difference((x, y) -> trycombine(simplifier, Op, x, y), args(prod1), args(prod2)))
+    @tryreturn mapsome(Prod, map_one_extra(x -> trycombine(simplifier, Op, x, one(x)), args(prod1), args(prod2)))
+end
+
 function trycombine(simplifier::MergeSame, Op::typeof(+), prod1::Prod, prod2::Prod)
     @tryreturn @invoke trycombine(simplifier, Op, prod1::Expression, prod2::Expression)
     @tryreturn @invoke trycombine(simplifier::Simplifier, Op, prod1, prod2)
+end
+
+function trycombine(simplifier::Simplifier, ::typeof(*), (base1, exponent1)::Pow, (base2, exponent2)::Pow)
+    if isequal(base1, base2)
+        @tryreturn mapsome(trycombine(simplifier, +, exponent1, exponent2)) do newexponent
+            Pow(base1, newexponent)
+        end
+    end
+
+    if isequal(exponent1, exponent2)
+        if isinteger(exponent1) || (ispositive(base1) && ispositive(base2)) 
+            @tryreturn mapsome(trycombine(simplifier, *, base1, base2)) do newbase
+                Pow(newbase, exponent1)
+            end
+        end
+    end
+end
+
+function trycombine(simplifier::MergeSame, Op::typeof(*), pow1::Pow, pow2::Pow)
+    @tryreturn @invoke trycombine(simplifier, Op, pow1::Expression, pow2::Expression)
+    @tryreturn @invoke trycombine(simplifier::Simplifier, Op, pow1, pow2)
 end
