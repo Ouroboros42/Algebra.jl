@@ -1,3 +1,5 @@
+import Base: exponent
+
 const Pow = NFunc{^, 2}
 
 base(power::Pow) = args(power)[1]

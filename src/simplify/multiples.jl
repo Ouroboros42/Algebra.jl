@@ -1,10 +1,20 @@
-function trycombine(::MergeSame, ::typeof(+), expr1::Expression, expr2::Expression)
-    if assoc_valid(*, TWO, expr1) && isequal(expr1, expr2)
-        return Prod(TWO, expr1)
+const RepeatableOps = Union{typeof(+), typeof(*)}
+
+repeat_assoc_op(::typeof(+)) = Prod
+repeat_assoc_op(::typeof(*)) = Pow 
+
+function trycombine(::MergeSame, Op::RepeatableOps, expr1::Expression, expr2::Expression)
+    mapsome(repeat_assoc_op(Op)) do repeated
+        if isvalid(repeated, expr1, TWO) && isequal(expr1, expr2)
+            return repeated(expr1, TWO)
+        end
     end
 end
 
-function trycombine(simplifier::MergeSame, Op::typeof(+), literal1::Literal, literal2::Literal)
+trycombine(simplifier::MergeSame, Op::RepeatableOps, operation::A, single::Expression) where {A <: Associative} = @invoke trycombine(simplifier::Simplifier, Op, operation, single) 
+trycombine(simplifier::MergeSame, Op::RepeatableOps, single::Expression, operation::A) where {A <: Associative} = @invoke trycombine(simplifier::Simplifier, Op, single, operation) 
+
+function trycombine(simplifier::MergeSame, Op::RepeatableOps, literal1::Literal, literal2::Literal)
     @tryreturn @invoke trycombine(simplifier, Op, literal1::Expression, literal2::Expression)
     @tryreturn @invoke trycombine(simplifier::Simplifier, Op, literal1, literal2)
 end

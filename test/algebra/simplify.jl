@@ -19,3 +19,7 @@ end
 @testset "compound" begin
     @test isequal(simplify(Prod(z, Sum(2x, 2x))), 4x*z)
 end
+
+@testset "square" begin
+    @test isequal(x * x, x^2)
+end

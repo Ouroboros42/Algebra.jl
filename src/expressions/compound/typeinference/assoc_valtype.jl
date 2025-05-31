@@ -6,7 +6,8 @@ Implement to determine the result of applying the given the associative `Op` to 
 assoc_valtype(Op, T1, T2) = throw(ResultTypeUndefinedError{Associative{Op}}(T1, T2))
 assoc_valtype(Op) = (T1, T2) -> assoc_valtype(Op, T1, T2)
 
-assoc_valid(args...) = !isnothing(assoc_valtype(args...))
+assoc_isvalid(args...) = !isnothing(assoc_valtype(args...))
+isvalid(::Type{<:Associative{Op}}, args...) where Op = assoc_isvalid(Op, args...)
 
 isclosed(Op, T) = assoc_valtype(Op, T, T) <: T
 

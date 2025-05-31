@@ -13,9 +13,6 @@ function trycombine(simplifier::Simplifier, Op, op1::Associative, op2::Associati
     @tryreturn @invoke trycombine(simplifier, Op, op1::Expression, op2)
 end
 
-trycombine(simplifier::MergeSame, Op::typeof(+), operation::A, single::Expression) where {A <: Associative} = @invoke trycombine(simplifier::Simplifier, Op, operation, single) 
-trycombine(simplifier::MergeSame, Op::typeof(+), single::Expression, operation::A) where {A <: Associative} = @invoke trycombine(simplifier::Simplifier, Op, single, operation) 
-
 function trycombine(simplifier::Simplifier, ::typeof(+), prod1::Prod, prod2::Prod)
     @tryreturn mapsome(Prod, map_single_difference((x, y) -> trycombine(simplifier, +, x, y), args(prod1), args(prod2)))
     @tryreturn mapsome(Prod, map_one_extra(x -> trycombine(simplifier, +, x, one(x)), args(prod1), args(prod2)))

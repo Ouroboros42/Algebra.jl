@@ -9,8 +9,8 @@ Alternatively override `map` directly to create a copy with transformed argument
 """
 abstract type CompoundExpression{T} <: Expression{T} end
 
-isequal(first::C, second::C) where {C <: CompoundExpression} = isequal(args(first), args(second))
-isless(first::C, second::C) where {C <: CompoundExpression} = isless(args(first), args(second))
+isequal(first::CompoundExpression, second::CompoundExpression) = isequal(args(first), args(second))
+isless(first::CompoundExpression, second::CompoundExpression) = isless(args(first), args(second))
 
 map(f, compound::CompoundExpression) = similar(compound, map(f, args(compound)))
 

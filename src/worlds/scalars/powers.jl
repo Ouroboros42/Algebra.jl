@@ -1,5 +1,6 @@
-nfunc_valtype(::typeof(^), base::Type{<:LogicalComplex}, ::Type{<:LogicalInt}) = base
-nfunc_valtype(::typeof(^), base::Type{<:LogicalInt}, ::Type{<:Signed}) = Rational{base}
+nfunc_valtype(::typeof(^), base::Type{<:Complex}, ::Type{<:LogicalInt}) = base
+nfunc_valtype(::typeof(^), base::Type{<:Real}, ::Type{<:LogicalInt}) = base
+nfunc_valtype(::typeof(^), base::Type{<:LogicalInt}, ::Type{<:Signed}) = Union{base, Rational{base}}
 nfunc_valtype(::typeof(^), base::Type{<:Real}, exponent::Type{<:Real}) = promote_type(base, exponent)
 
 function apply_nfunc(Op::typeof(^), base::ComplexExact, exponent::ComplexExact)
