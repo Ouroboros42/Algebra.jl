@@ -32,24 +32,3 @@ function trycombine(simplifier::MergeSame, Op::typeof(+), prod1::Prod, prod2::Pr
     @tryreturn @invoke trycombine(simplifier, Op, prod1::Expression, prod2::Expression)
     @tryreturn @invoke trycombine(simplifier::Simplifier, Op, prod1, prod2)
 end
-
-function trycombine(simplifier::Simplifier, ::typeof(*), (base1, exponent1)::Pow, (base2, exponent2)::Pow)
-    if isequal(base1, base2)
-        @tryreturn mapsome(trycombine(simplifier, +, exponent1, exponent2)) do newexponent
-            Pow(base1, newexponent)
-        end
-    end
-
-    if isequal(exponent1, exponent2)
-        if isinteger(exponent1) || (ispositive(base1) && ispositive(base2)) 
-            @tryreturn mapsome(trycombine(simplifier, *, base1, base2)) do newbase
-                Pow(newbase, exponent1)
-            end
-        end
-    end
-end
-
-function trycombine(simplifier::MergeSame, Op::typeof(*), pow1::Pow, pow2::Pow)
-    @tryreturn @invoke trycombine(simplifier, Op, pow1::Expression, pow2::Expression)
-    @tryreturn @invoke trycombine(simplifier::Simplifier, Op, pow1, pow2)
-end

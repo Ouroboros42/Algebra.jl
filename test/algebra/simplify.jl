@@ -22,4 +22,6 @@ end
 
 @testset "square" begin
     @test isequal(x * x, x^2)
+    @test isequal(x^2 * y * x^2, y * x^4)
+    @test isequal(x * x * x, x^3)
 end
