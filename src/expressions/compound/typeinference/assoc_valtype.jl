@@ -23,12 +23,6 @@ function assoc_valtype(Op, (expr, others...)::NTuple{N, Expression}) where N
     assoc_valtype(Op, valtype(expr), assoc_valtype(Op, others))
 end
 
-function assoc_valtype(Op, expressions::NTuple{N, E}) where {N, E <: Expression}
-    @tryreturn closed_valtype(Op, E)
-
-    @invoke assoc_valtype(Op, expressions::NTuple{N, Expression})    
-end
-
 assoc_valtype(Op, expressions::Expression...) = assoc_valtype(Op, expressions)
 
 function assoc_valtype(Op, expressions::Vector{E}) where {E <: Expression}

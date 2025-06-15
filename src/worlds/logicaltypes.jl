@@ -13,11 +13,8 @@ realtype(C::Type{<:Complex}) = fieldtype(C, :re)
 realconvert(R, value::Real) = convert(R, value)
 realconvert(R, value::Complex) = convert(Complex{R}, value)
 
-const CVector = Vector{<:LogicalComplex}
-const CMatrix = Matrix{<:LogicalComplex}
-const CArray = Array{<:LogicalComplex}
+const CVector = AbstractVector{<:LogicalComplex}
+const CMatrix = AbstractMatrix{<:LogicalComplex}
+const CArray = AbstractArray{<:LogicalComplex}
 
 const CLinear = Union{LogicalComplex, CArray}
-
-iscommutative(::Type{<:Sum{<:CLinear}}) = true
-iscommutative(::Type{<:Prod{<:LogicalComplex}}) = true

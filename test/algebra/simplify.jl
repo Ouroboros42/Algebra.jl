@@ -1,5 +1,7 @@
 @var x R
 @var z C
+@var A Matrix{Real}
+@var B Matrix{Real}
 
 @testset "associative" begin
     @test isequal((x + 1) + z, x + (1 + z))
@@ -9,6 +11,8 @@ end
 @testset "commutative" begin
     @test isequal(x + 1 + z, z + 1 + x)
     @test isequal(x * 2 * z, z * 2 * x)
+    @test !isequal(A * B, B * A)
+    @test isequal(A * x^2 * B, A * x * B * x)
 end
 
 @testset "constants combine" begin

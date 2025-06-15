@@ -1,5 +1,8 @@
 const RingOps = Union{typeof(+), typeof(*)}
 
+iscentral(::typeof(+), ::Expression{<:CLinear}) = true
+iscentral(::typeof(*), ::Expression{<:LogicalComplex}) = true
+
 assoc_valtype(::RingOps, N1::Type{<:Number}, N2::Type{<:Number}) = ring_promote(N1, N2)
 
 ring_promote(U1::Type{<:Unsigned}, U2::Type{<:Unsigned}) = promote_type(U1, U2)

@@ -17,9 +17,6 @@ arg(func::NFunc{Op, 1}) where Op = only(args(func))
 isequal(first::NFunc{Op, N}, second::NFunc{Op, N}) where {Op, N} = isequal(args(first), args(second))
 isless(first::NFunc{Op, N}, second::NFunc{Op, N}) where {Op, N} = isless(args(first), args(second))
 
-iscommutative(::Type{<:NFunc}) = false
-iscommutative(::F) where {F <: NFunc} = iscommutative(F)
-
 function print(io::IO, (; arguments)::NFunc{Op}) where Op
     argstr = join(map(string, arguments), ", ")
 
