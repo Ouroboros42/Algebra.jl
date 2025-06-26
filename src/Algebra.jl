@@ -2,6 +2,8 @@ module Algebra
 
 using Logging
 
+using Base.Order
+
 include("util/typing.jl")
 include("util/nullable.jl")
 include("util/iterating.jl")
