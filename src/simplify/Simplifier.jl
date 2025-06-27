@@ -15,7 +15,7 @@ function simplify(expression::Expression, simplifiers::NTuple{N, Simplifier}) wh
         maybe_simplified = trysimplify(expression, simplifier)
 
         if !isnothing(maybe_simplified)
-            @debug "$simplifier simplified $(repr(expression)) to $(repr(maybe_simplified))"
+            @debug "Using $simplifier: $(expression) to $(maybe_simplified)"
 
             return simplify(maybe_simplified, simplifiers)
         end

@@ -10,5 +10,3 @@ export Pow, base, exponent
 
 # Simplifiers
 export NoSimplify, Trivial
-export MergeSame
-export StandardSimplifiers

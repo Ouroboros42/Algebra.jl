@@ -14,7 +14,7 @@ macro implement_binary_op(opfun, Optype)
     Optype = esc(Optype)
 
     quote
-        $opfun(args::Expression...) = simplify($Optype(args...))
+        $opfun(args::Expression...) = $Optype(args...)
         @extend_binary_op($opfun)
     end 
 end

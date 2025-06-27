@@ -1,7 +1,5 @@
 struct Trivial <: Simplifier end
 
-struct MergeSame <: Simplifier end
-
-const StandardSimplifiers = (Trivial(), MergeSame())
+const StandardSimplifiers = (Trivial(),)
 
 simplify(expression::Expression) = simplify(expression, StandardSimplifiers)

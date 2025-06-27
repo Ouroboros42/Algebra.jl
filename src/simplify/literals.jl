@@ -15,8 +15,6 @@ apply_assoc(::Trivial, Op, value1, value2) = apply_assoc(Op, value1, value2)
 
 function trycombine(simplifier::Simplifier, Op, (value1,)::Literal, (value2,)::Literal)
     mapsome(apply_assoc(simplifier, Op, value1, value2)) do newvalue
-        @debug "$simplifier: $Op($value1, $value2) → $newvalue"
-        
         Literal(newvalue)
     end
 end
@@ -40,8 +38,6 @@ function trysimplify(func::NFunc{Op, N, T, <:NTuple{N, Literal}}, simplifier::Si
     values = map(value, args(func))
 
     mapsome(apply_nfunc(simplifier, Op, values...)) do newvalue
-        @debug "$simplifier: $Op$values → $newvalue"
-
         Literal(newvalue)
     end
 end
