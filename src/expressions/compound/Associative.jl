@@ -19,7 +19,10 @@ isless(first::Associative{Op}, second::Associative{Op}) where Op = isless(args(f
 isidentity(Op, ::Expression) = false
 isidentity(::Associative{Op}) where Op = element -> isidentity(Op, element)
 
-iscentral(Op, element::Expression) = isidentity(Op, element)
+isabsorbing(Op, ::Expression) = false
+isabsorbing(::Associative{Op}) where Op = element -> isabsorbing(Op, element)
+
+iscentral(Op, element::Expression) = isidentity(Op, element) || isabsorbing(Op, element)
 iscentral(::Associative{Op}) where Op = element -> iscentral(Op, element)
 
 isplitargs(operation::Associative) = ipartition(iscentral(operation), operation.arguments)

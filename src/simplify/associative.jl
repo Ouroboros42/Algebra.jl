@@ -78,10 +78,8 @@ function trysimplify(operation::Associative{Op, T}, simplifier::Trivial) where {
         return flatten(operation)
     end
 
-    if operation isa Prod
-        @tryreturn firstornothing(iszero, operation.arguments)
-    end
-
+    @tryreturn firstornothing(isabsorbing(operation), operation.arguments)
+    
     if any(isidentity(operation), operation.arguments)
         return Associative{Op, T}(filter(!isidentity(operation), operation.arguments)) 
     end
