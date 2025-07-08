@@ -1,4 +1,4 @@
-import Base: +, *, ^, -, /, &, |
+import Base: +, *, ^, -, /, &, |, ==
 
 macro extend_binary_op(opfun)
     opfun = esc(opfun)
@@ -43,3 +43,5 @@ inv(expression::Expression) = expression ^ NEG
 
 @implement_assoc_op(&)
 @implement_assoc_op(|)
+
+@implement_binary_op(==)
