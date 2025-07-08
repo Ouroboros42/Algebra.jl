@@ -1,4 +1,18 @@
-function trysimplify(((base, exp1), exp2)::Pow{T, <:Tuple{Pow, Expression}}, ::Trivial) where T
+function trysimplify((base, exponent)::Pow, ::Trivial)
+    if iszero(exponent); return one(base) end
+
+    if isone(exponent); return base end
+
+    if isone(base); return base end
+
+    # TODO handle zero base
+end
+
+function trysimplify(power::Pow{T, <:Tuple{Pow, Expression}}, simplifier::Trivial) where T
+    @tryreturn @invoke trysimplify(power::Pow, simplifier)
+
+    ((base, exp1), exp2) = power
+
     if isinteger(exp2) || (isreal(exp1) && ispositive(base))
         base ^ (exp1 * exp2)
     end
