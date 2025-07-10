@@ -1,2 +1,2 @@
-apply_nfunc(::typeof(==), a, b) = a == b
+apply_simple(::typeof(==), a, b) = a == b
 

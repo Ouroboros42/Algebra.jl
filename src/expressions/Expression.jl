@@ -1,8 +1,3 @@
-import Base: isless, isequal
-import Base: valtype
-import Base: print, show
-import Base: convert
-
 """
 Base type for all algebraic expressions.
 """

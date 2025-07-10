@@ -53,7 +53,7 @@ function map_one_extra(f, seq1, seq2)
     for ((iL, itemL), (iS, itemS)) in zip(pairs(longer), pairs(shorter))
         if isequal(itemL, itemS); continue end
 
-        if longer[iL+1:end] != shorter[iS:end]; return end
+        if !isequal(longer[iL+1:end], shorter[iS:end]); return end
     
         extra_index = iL
         extra_item = itemL

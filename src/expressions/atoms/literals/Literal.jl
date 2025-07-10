@@ -1,5 +1,3 @@
-import Base: iterate, isinteger
-
 struct Literal{T} <: Expression{T}
     value::T
 end
@@ -20,8 +18,3 @@ end
 
 iterate(literal::Literal) = (literal.value, nothing)
 iterate(literal::Literal, state) = nothing
-
-const NEG = Literal(Int8(-1))
-const ZERO = Literal(UInt8(0))
-const ONE = Literal(UInt8(1))
-const TWO = Literal(UInt8(2))

@@ -2,6 +2,6 @@ function assoc_valtype(Op::typeof(*), M1::Type{<:AbstractMatrix}, M2::Type{<:Abs
     AbstractMatrix{assoc_valtype(Op, valtype(M1), valtype(M2))}
 end
 
-function nfunc_valtype(Op::typeof(^), M::Type{<:AbstractMatrix}, N::Type{<:LogicalInt})
-    AbstractMatrix{nfunc_valtype(Op, valtype(M), N)}
+function simple_valtype(Op::typeof(^), M::Type{<:AbstractMatrix}, N::Type{<:LogicalInt})
+    AbstractMatrix{simple_valtype(Op, valtype(M), N)}
 end

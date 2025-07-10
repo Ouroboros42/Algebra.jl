@@ -1,12 +1,13 @@
 """
 An associative operation, labelled by `Op`, which is usually the equivalent julia function. 
 """
-struct Associative{Op, T} <: CompoundExpression{T}
+struct Associative{Op, T} <: Compound{T}
     arguments::Vector{Expression}
 end
 
 Associative{Op}(arguments) where Op = Associative{Op, assoc_valtype(Op, arguments)}(arguments)
 Associative{Op}(arguments::Expression...) where Op = Associative{Op, assoc_valtype(Op, arguments)}(collect(arguments))
+(A::Type{<:Associative})(arguments...) = A(map(Expression, arguments)...)
 
 similar(::Associative{Op}, arguments...) where Op = Associative{Op}(arguments...)
 args(operation::Associative) = operation.arguments

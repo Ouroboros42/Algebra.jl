@@ -7,9 +7,9 @@ Should implement `args` to return a collection of the sub-expressions, which sup
 Should implement `similar` to create a copy with new arguments (identical if given the result of `args`).
 Alternatively override `map` directly to create a copy with transformed arguments.
 """
-abstract type CompoundExpression{T} <: Expression{T} end
+abstract type Compound{T} <: Expression{T} end
 
-map(f, compound::CompoundExpression) = similar(compound, map(f, args(compound)))
+map(f, compound::Compound) = similar(compound, map(f, args(compound)))
 
-iterate(compound::CompoundExpression) = iterate(args(compound))
-iterate(compound::CompoundExpression, state) = iterate(args(compound), state)
+iterate(compound::Compound) = iterate(args(compound))
+iterate(compound::Compound, state) = iterate(args(compound), state)

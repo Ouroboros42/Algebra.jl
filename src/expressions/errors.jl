@@ -2,7 +2,7 @@ import Base.showerror
 
 abstract type ResultInferenceError <: Exception end
 
-struct ResultTypeUndefinedError{Outer <: CompoundExpression, Args <: Tuple} <: ResultInferenceError
+struct ResultTypeUndefinedError{Outer <: Compound, Args <: Tuple} <: ResultInferenceError
     args::Args
 end
 

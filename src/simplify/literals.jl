@@ -20,24 +20,24 @@ function trycombine(simplifier::Simplifier, Op, (value1,)::Literal, (value2,)::L
 end
 
 """
-    apply_nfunc(Op, values...)
+    apply_simple(Op, values...)
 
 Evaluate `Op` exactly, returns `nothing` if not possible.
 """
-apply_nfunc(Op, values...) = nothing
+apply_simple(Op, values...) = nothing
 
 """
-    apply_nfunc(simplifier::Simplifier, Op, values...)
+    apply_simple(simplifier::Simplifier, Op, values...)
 
 Evaluate `Op` (possibly approximately), according to `simplifier`, returns `nothing` if not possible.
 """
-apply_nfunc(simplifier::Simplifier, Op, values...) = nothing
-apply_nfunc(::Trivial, Op, values...) = apply_nfunc(Op, values...)
+apply_simple(simplifier::Simplifier, Op, values...) = nothing
+apply_simple(::Trivial, Op, values...) = apply_simple(Op, values...)
 
-function trysimplify(func::NFunc{Op, N, T, <:NTuple{N, Literal}}, simplifier::Simplifier) where {N, Op, T}
+function trysimplify(func::Simple{Op, N, T, <:NTuple{N, Literal}}, simplifier::Simplifier) where {N, Op, T}
     values = map(value, args(func))
 
-    mapsome(apply_nfunc(simplifier, Op, values...)) do newvalue
+    mapsome(apply_simple(simplifier, Op, values...)) do newvalue
         Literal(newvalue)
     end
 end

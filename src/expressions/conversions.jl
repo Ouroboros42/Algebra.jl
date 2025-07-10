@@ -1,6 +1,4 @@
-import Base: convert
-
-express(value) = convert(Expression, value)
+Expression(value) = convert(Expression, value)
 
 convert(::Type{T}, literal::Literal{<:T}) where T = literal.value
 
