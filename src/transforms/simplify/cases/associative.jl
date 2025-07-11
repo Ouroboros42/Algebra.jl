@@ -37,7 +37,7 @@ toargs(op) = expr -> toargs(op, expr)
 
 flatten(operation::Associative) = similar(operation, collect(Iterators.flatmap(toargs(operation), args(operation))))
 
-function tryapply(operation::Associative{Op}, transform::Transform) where Op
+function tryapply(transform::Transform, operation::Associative{Op}) where Op
     splitopargs = isplitargs(operation)
     central, ordered = splitopargs
     anycentral, anyordered = @. !isempty(splitopargs)
@@ -67,7 +67,7 @@ function tryapply(operation::Associative{Op}, transform::Transform) where Op
     end
 end
 
-function tryapply(operation::Associative{Op, T}, transform::Trivial) where {Op, T}
+function tryapply(transform::Trivial, operation::Associative{Op, T}) where {Op, T}
     if isempty(operation.arguments)
         throw(EmptyOperationError{Op}())
     end
@@ -86,7 +86,7 @@ function tryapply(operation::Associative{Op, T}, transform::Trivial) where {Op, 
     
     @tryreturn trysort(operation, CentralFirst(operation))
 
-    @tryreturn @invoke tryapply(operation, transform::Transform)
+    @tryreturn @invoke tryapply(transform::Transform, operation)
 end
 
 trysort(operation::Associative, order::Ordering) = if !issorted(operation.arguments; order)

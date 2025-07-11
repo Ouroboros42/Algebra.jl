@@ -1,4 +1,4 @@
-function tryapply((base, exponent)::Pow, ::Trivial)
+function tryapply(::Trivial, (base, exponent)::Pow)
     if iszero(exponent); return one(base) end
 
     if isone(exponent); return base end
@@ -8,8 +8,8 @@ function tryapply((base, exponent)::Pow, ::Trivial)
     # TODO handle zero base
 end
 
-function tryapply(power::Pow{T, <:Tuple{Pow, Expression}}, transform::Trivial) where T
-    @tryreturn @invoke tryapply(power::Pow, transform)
+function tryapply(transform::Trivial, power::Pow{T, <:Tuple{Pow, Expression}}) where T
+    @tryreturn @invoke tryapply(transform, power::Pow)
 
     ((base, exp1), exp2) = power
 

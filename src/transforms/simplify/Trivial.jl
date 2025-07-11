@@ -1,3 +1,3 @@
 struct Trivial <: Transform end
 
-simplify(expression::Expression) = apply(expression, Trivial())
+simplify(expression::Expression) = apply(Trivial(), expression)

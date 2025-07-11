@@ -34,8 +34,8 @@ Evaluate `Op` (possibly approximately), according to `transform`, returns `nothi
 apply_operation(transform::Transform, Op, values...) = nothing
 apply_operation(::Trivial, Op, values...) = apply_operation(Op, values...)
 
-function tryapply(func::Operation{Op, N, T, <:NTuple{N, Literal}}, transform::Transform) where {N, Op, T}
-    values = map(value, args(func))
+function tryapply(transform::Transform, operation::Operation{Op, N, T, <:NTuple{N, Literal}}) where {N, Op, T}
+    values = map(value, args(operation))
 
     mapsome(apply_operation(transform, Op, values...)) do newvalue
         Literal(newvalue)

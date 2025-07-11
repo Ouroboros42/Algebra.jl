@@ -1,25 +1,25 @@
 abstract type Transform end
 
-apply(transforms...) = expression -> apply(expression, transforms...)
-apply(expression::Expression, transforms::Transform...) = apply(expression, transforms)
+apply(transforms) = expression -> apply(transforms, expression)
+apply(transform::Transform, expression::Expression) = apply((transform,), expression)
 
 """
 Apply specified transforms to the Expression until it can be updated no more.
 Should not need overriding, override `tryapply` instead.
 """
-function apply(expression::Expression, transforms::NTuple{N, Transform}) where N
+function apply(transforms::NTuple{N, Transform}, expression::Expression) where N
     for tranforms in transforms
-        maybe_transformed = tryapply(expression, tranforms)
+        maybe_transformed = tryapply(tranforms, expression)
 
         if !isnothing(maybe_transformed)
             @debug "Using $tranforms: $(expression) to $(maybe_transformed)"
 
-            return apply(maybe_transformed, transforms)
+            return apply(transforms, maybe_transformed)
         end
     end
 
     expression
 end
 
-tryapply(::Expression, ::Transform) = nothing
+tryapply(::Transform, ::Expression) = nothing
 
