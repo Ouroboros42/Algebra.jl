@@ -9,7 +9,7 @@ import Base: iterate, isinteger
 import Base: zero, one
 import Base: print, show
 import Base: convert
-import Base: +, *, ^, -, /, &, |, ==
+import Base: +, *, ^, -, /, &, |, ==, !
 
 # Core interface
 export @var, Variable, Literal
@@ -44,6 +44,7 @@ include("expressions/compound/associative/ops/And.jl")
 include("expressions/compound/associative/ops/Or.jl")
 include("expressions/compound/simple/ops/Pow.jl")
 include("expressions/compound/simple/ops/Equality.jl")
+include("expressions/compound/simple/ops/Not.jl")
 include("simplify/checks.jl")
 include("simplify/simplifiers/Simplifier.jl")
 include("simplify/simplifiers/Trivial.jl")
@@ -53,7 +54,7 @@ include("simplify/literals.jl")
 include("simplify/associative.jl")
 include("simplify/multiples.jl")
 include("simplify/powers.jl")
-include("simplify/equality.jl")
+include("simplify/boolean.jl")
 include("worlds/logicaltypes.jl")
 include("worlds/scalar/ring.jl")
 include("worlds/scalar/powers.jl")
