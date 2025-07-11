@@ -1,4 +1,4 @@
-const Not = @operator Simple{!, 1}
+const Not = @operator Operation{!, 1}
 
 arg(not::Not) = only(args(not))
 

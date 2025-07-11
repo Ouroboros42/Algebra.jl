@@ -4,7 +4,7 @@ import Base: exponent
 Expression representing `base^exponent`.
 Complex values are allowed, defined by the standard branch cut in log, to match julia arithmetic.
 """
-const Pow = @operator Simple{^, 2}
+const Pow = @operator Operation{^, 2}
 
 base(power::Pow) = args(power)[1]
 exponent(power::Pow) = args(power)[2]

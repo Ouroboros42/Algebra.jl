@@ -1,4 +1,4 @@
-const Equality = @operator Simple{==, 2}
+const Equality = @operator Operation{==, 2}
 
 # Prevent `isequal` fallback to `==` which is now non-boolean
 isequal(expr::Expression, other) = false

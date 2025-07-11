@@ -34,7 +34,7 @@ Evaluate `Op` (possibly approximately), according to `simplifier`, returns `noth
 apply_simple(simplifier::Simplifier, Op, values...) = nothing
 apply_simple(::Trivial, Op, values...) = apply_simple(Op, values...)
 
-function trysimplify(func::Simple{Op, N, T, <:NTuple{N, Literal}}, simplifier::Simplifier) where {N, Op, T}
+function trysimplify(func::Operation{Op, N, T, <:NTuple{N, Literal}}, simplifier::Simplifier) where {N, Op, T}
     values = map(value, args(func))
 
     mapsome(apply_simple(simplifier, Op, values...)) do newvalue
