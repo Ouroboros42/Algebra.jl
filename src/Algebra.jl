@@ -13,13 +13,13 @@ import Base: +, *, ^, -, /, &, |, ==, !
 
 # Core interface
 export @var, Variable, Literal
-export simplify
+export apply, simplify
 
 # Expressions types - ideally rarely needed
 export Expression, valtype, args
 export Sum, Prod, Pow, base, exponent
 
-# Simplifiers
+# Transforms
 export NoSimplify, Trivial
 
 include("util/typing.jl")
@@ -45,16 +45,16 @@ include("expressions/compound/associative/ops/Or.jl")
 include("expressions/compound/operation/ops/Pow.jl")
 include("expressions/compound/operation/ops/Equality.jl")
 include("expressions/compound/operation/ops/Not.jl")
-include("simplify/checks.jl")
-include("simplify/simplifiers/Simplifier.jl")
-include("simplify/simplifiers/Trivial.jl")
-include("simplify/simplifiers/Approximate.jl")
-include("simplify/compound.jl")
-include("simplify/literals.jl")
-include("simplify/associative.jl")
-include("simplify/multiples.jl")
-include("simplify/powers.jl")
-include("simplify/boolean.jl")
+include("transforms/checks.jl")
+include("transforms/Transform.jl")
+include("transforms/simplify/Trivial.jl")
+include("transforms/simplify/Approximate.jl")
+include("transforms/simplify/cases/compound.jl")
+include("transforms/simplify/cases/literals.jl")
+include("transforms/simplify/cases/associative.jl")
+include("transforms/simplify/cases/multiples.jl")
+include("transforms/simplify/cases/powers.jl")
+include("transforms/simplify/cases/boolean.jl")
 include("worlds/logicaltypes.jl")
 include("worlds/scalar/ring.jl")
 include("worlds/scalar/powers.jl")

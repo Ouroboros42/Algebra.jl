@@ -6,7 +6,7 @@ struct Operation{Op, N, T, Args <: NTuple{N, Expression}} <: Compound{T}
 end
 
 Operation{Op, N, T}(arguments::Args) where {Op, N, T, Args <: NTuple{N, Expression}} = Operation{Op, N, T, Args}(arguments)
-Operation{Op, N}(arguments::NTuple{N, Expression}) where {Op, N} = Operation{Op, N, simple_valtype(Op, map(valtype, arguments)...)}(arguments)
+Operation{Op, N}(arguments::NTuple{N, Expression}) where {Op, N} = Operation{Op, N, operation_valtype(Op, map(valtype, arguments)...)}(arguments)
 Operation{Op, N}(arguments::Expression...) where {Op, N} = Operation{Op, N}(arguments)
 (F::Type{<:Operation})(arguments...) = F(map(Expression, arguments)...)
 
