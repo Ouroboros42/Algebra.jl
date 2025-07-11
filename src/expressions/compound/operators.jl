@@ -20,8 +20,8 @@ macro implement_binary_op(opfun, Optype)
 end
 
 macro operator(expr::Expr)
-    if expr.head !== :curly
-        throw(ArgumentError("Malformed operator type: $expr"))
+    if expr.head !== :curly || length(expr.args) < 2
+        throw(ArgumentError("Malformed operator Expression type: $expr"))
     end
 
     Optype = esc(expr)
