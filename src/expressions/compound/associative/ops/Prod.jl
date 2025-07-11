@@ -1,5 +1,4 @@
-const Prod = Associative{*}
-@implement_assoc_op(*)
+const Prod = @operator Associative{*}
 
 inv(expression::Expression) = expression ^ NEG
 /(first::Expression, second::Expression) = first * inv(second)

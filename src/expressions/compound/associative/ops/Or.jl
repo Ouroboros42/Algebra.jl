@@ -1,6 +1,4 @@
-const Or = Associative{|}
-
-@implement_assoc_op(|)
+const Or = @operator Associative{|}
 
 isidentity(::typeof(|), element::Literal{Bool}) = !element.value
 isabsorbing(::typeof(|), element::Literal{Bool}) = element.value

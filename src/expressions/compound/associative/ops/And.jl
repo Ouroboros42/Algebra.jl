@@ -1,6 +1,4 @@
-const And = Associative{&}
-
-@implement_assoc_op(&)
+const And = @operator Associative{&}
 
 isidentity(::typeof(&), element::Literal{Bool}) = element.value
 isabsorbing(::typeof(&), element::Literal{Bool}) = !element.value

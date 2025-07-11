@@ -1,6 +1,4 @@
-const Equality = Simple{==, 2}
-
-@implement_binary_op(==)
+const Equality = @operator Simple{==, 2}
 
 # Prevent `isequal` fallback to `==` which is now non-boolean
 isequal(expr::Expression, other) = false
