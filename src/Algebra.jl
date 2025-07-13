@@ -5,8 +5,9 @@ using Base.Order
 
 import Base: valtype
 import Base: isless, isequal
-import Base: iterate, isinteger
-import Base: zero, one
+import Base: iterate
+import Base: isinteger, isreal
+import Base: zero, one, iszero, isone
 import Base: print, show
 import Base: convert
 import Base: +, *, ^, -, /, &, |, ==, !
