@@ -1,3 +1,10 @@
+@testset "jointuples" begin
+    using Algebra: jointuples
+
+    @test jointuples() == ()
+    @test jointuples((1,), (2, 3), (4, 5, 6)) == (1, 2, 3, 4, 5, 6)
+end
+
 @testset "adjacent" begin
     using Algebra: adjacent
 

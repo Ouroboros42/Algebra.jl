@@ -6,15 +6,15 @@ Evaluate associative `Op` exactly, returns `nothing` if not possible.
 apply_assoc(Op, value1, value2) = nothing
 
 """
-    apply_assoc(transform::Transform, Op, value1, value2)
+    apply_assoc(transform::Simplifier, Op, value1, value2)
 
 Evaluate associative `Op` (possibly approximately), according to `transform`, returns `nothing` if not possible.
 """
-apply_assoc(transform::Transform, Op, value1, value2) = nothing
+apply_assoc(simplifier::Simplifier, Op, value1, value2) = nothing
 apply_assoc(::Trivial, Op, value1, value2) = apply_assoc(Op, value1, value2)
 
-function trycombine(transform::Transform, Op, (value1,)::Literal, (value2,)::Literal)
-    mapsome(apply_assoc(transform, Op, value1, value2)) do newvalue
+function trycombine(simplifier::Simplifier, Op, (value1,)::Literal, (value2,)::Literal)
+    mapsome(apply_assoc(simplifier, Op, value1, value2)) do newvalue
         Literal(newvalue)
     end
 end
@@ -31,13 +31,13 @@ apply_operation(Op, values...) = nothing
 
 Evaluate `Op` (possibly approximately), according to `transform`, returns `nothing` if not possible.
 """
-apply_operation(transform::Transform, Op, values...) = nothing
+apply_operation(simplifier::Simplifier, Op, values...) = nothing
 apply_operation(::Trivial, Op, values...) = apply_operation(Op, values...)
 
-function tryapply(transform::Transform, operation::Operation{Op, N, T, <:NTuple{N, Literal}}) where {N, Op, T}
+function tryapply(simplifier::Simplifier, operation::Operation{Op, N, T, <:NTuple{N, Literal}}) where {N, Op, T}
     values = map(value, args(operation))
 
-    mapsome(apply_operation(transform, Op, values...)) do newvalue
+    mapsome(apply_operation(simplifier, Op, values...)) do newvalue
         Literal(newvalue)
     end
 end

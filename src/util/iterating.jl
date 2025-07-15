@@ -1,3 +1,6 @@
+jointuples() = ()
+jointuples(tuple::Tuple) = tuple
+jointuples(first::Tuple, second::Tuple, others::Tuple...) = jointuples((first..., second...), others...)
 
 adjacent(seq) = Iterators.zip(seq, Iterators.drop(seq, 1))
 

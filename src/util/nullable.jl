@@ -1,5 +1,5 @@
 macro tryreturn(expr)
-    return quote
+    quote
         local value = $(esc(expr))
         
         if !isnothing(value)
@@ -9,12 +9,24 @@ macro tryreturn(expr)
 end
 
 macro returnnothing(expr)
-    return quote
+    quote
         local value = $(esc(expr))
         
         if isnothing(value); return end
 
         value
+    end
+end
+
+macro ordefault(expr, default)
+    quote
+        local value = $(esc(expr))
+
+        if isnothing(value)
+            $(esc(default))
+        else
+            value
+        end
     end
 end
 

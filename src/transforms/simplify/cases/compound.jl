@@ -1,8 +1,8 @@
 """
-Transform `args` first, then apply `transforms` to whole expression.
+Transform `args` first, then apply `transform` to whole expression.
 """
-function apply(transforms::NTuple{N, Transform}, compound::Compound) where N
-    argstransformed = map(apply(transforms), compound)
+function apply(transform::Transform, compound::Compound)
+    argstransformed = map(apply(transform), compound)
 
-    @invoke apply(transforms, argstransformed::Expression)
+    @invoke apply(transform, argstransformed::Expression)
 end

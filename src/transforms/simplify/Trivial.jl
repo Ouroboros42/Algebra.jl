@@ -1,3 +1,5 @@
-struct Trivial <: Transform end
+struct Trivial <: Simplifier end
 
-simplify(expression::Expression) = apply(Trivial(), expression)
+const TRIVIAL_CHAIN = chain(Trivial())
+
+simplify(expression::Expression) = apply(TRIVIAL_CHAIN, expression)
