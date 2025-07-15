@@ -14,14 +14,11 @@ import Base: +, *, ^, -, /, &, |, ==, !
 
 # Core interface
 export @var, Variable, Literal
-export apply, simplify
+export apply, simplify, approximate, substitute
 
 # Expressions types - ideally rarely needed
 export Expression, valtype, args
 export Sum, Prod, Pow, base, exponent
-
-# Transforms
-export NoSimplify, Trivial
 
 include("util/typing.jl")
 include("util/nullable.jl")
@@ -48,10 +45,11 @@ include("expressions/compound/operation/ops/Equality.jl")
 include("expressions/compound/operation/ops/Not.jl")
 include("transforms/checks.jl")
 include("transforms/Transform.jl")
+include("transforms/compound.jl")
 include("transforms/simplify/Simplifier.jl")
 include("transforms/simplify/Trivial.jl")
+include("transforms/Substitute.jl")
 include("transforms/simplify/Approximate.jl")
-include("transforms/simplify/cases/compound.jl")
 include("transforms/simplify/cases/literals.jl")
 include("transforms/simplify/cases/associative.jl")
 include("transforms/simplify/cases/multiples.jl")
