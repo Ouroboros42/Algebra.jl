@@ -16,6 +16,7 @@ replacesomeargs(operation::Associative, replacements...) = similar(operation, re
 
 isequal(first::Associative{Op}, second::Associative{Op}) where Op = isequal(args(first), args(second))
 isless(first::Associative{Op}, second::Associative{Op}) where Op = isless(args(first), args(second))
+hash(associative::Associative{Op}, h::UInt) where Op = hash(Op, hash(args(associative), h))
 
 isidentity(Op, ::Expression) = false
 isidentity(::Associative{Op}) where Op = element -> isidentity(Op, element)

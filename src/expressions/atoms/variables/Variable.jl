@@ -21,6 +21,7 @@ else
 end
 
 isequal(var1::VariableByName{T}, var2::VariableByName{T}) where T = name(var1) == name(var2) 
+hash(variable::VariableByName, h::UInt) = hash(name(variable), h)
 
 isless(first::UniqueVariable{T}, second::UniqueVariable{T}) where T = isless(objectid(first), objectid(second))
 isless(first::VariableByName{T}, second::VariableByName{T}) where T = isless(name(first), name(second))

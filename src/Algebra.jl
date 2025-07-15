@@ -4,7 +4,7 @@ using Logging
 using Base.Order
 
 import Base: valtype
-import Base: isless, isequal
+import Base: isless, isequal, hash
 import Base: iterate
 import Base: isinteger, isreal
 import Base: zero, one, iszero, isone

@@ -17,6 +17,7 @@ arg(func::Operation{Op, 1}) where Op = only(args(func))
 
 isequal(first::Operation{Op, N}, second::Operation{Op, N}) where {Op, N} = isequal(args(first), args(second))
 isless(first::Operation{Op, N}, second::Operation{Op, N}) where {Op, N} = isless(args(first), args(second))
+hash(operation::Operation{Op}, h::UInt) where Op = hash(Op, hash(args(operation), h))
 
 function print(io::IO, (; arguments)::Operation{Op}) where Op
     argstr = join(map(string, arguments), ", ")
