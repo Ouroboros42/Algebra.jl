@@ -18,6 +18,6 @@ function apply_assoc(Op::RingOps, n1::ComplexExact, n2::ComplexExact)
     Op(convert(newtype, n1), convert(newtype, n2))    
 end
 
-function apply_assoc(::ApproxFloat{F}, Op::RingOps, n1::LogicalComplex, n2::LogicalComplex) where F
+function apply_assoc(::FloatApprox{F}, Op::RingOps, n1::LogicalComplex, n2::LogicalComplex) where F
     Op(realconvert(F, n1), realconvert(F, n2))
 end

@@ -9,6 +9,6 @@ expressionpair(pair::Pair) = Expression(pair.first) => Expression(pair.second)
 
 Substitute(args::Pair...) = Substitute(ExpressionMap(map(expressionpair, args)...))
 
-substitute(expression::Expression, args...) = apply(TRIVIAL_CHAIN, apply(Substitute(args...), expression))
+substitute(expression::Expression, args...) = simplify(apply(Substitute(args...), expression))
 
 tryapply(substitute::Substitute, expression::Expression) = get(substitute.mapping, expression, nothing)

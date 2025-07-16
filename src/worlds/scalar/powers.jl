@@ -13,6 +13,6 @@ function apply_operation(Op::typeof(^), base::ComplexExact, exponent::ComplexExa
     Op(realconvert(Rational, base), exponent)
 end
 
-function apply_operation(::ApproxFloat{F}, Op::typeof(^), base::LogicalComplex, exponent::LogicalComplex) where F
+function apply_operation(::FloatApprox{F}, Op::typeof(^), base::LogicalComplex, exponent::LogicalComplex) where F
     Op(realconvert(F, base), realconvert(F, exponent))
 end
