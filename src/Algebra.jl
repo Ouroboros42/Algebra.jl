@@ -11,6 +11,7 @@ import Base: zero, one, iszero, isone
 import Base: print, show
 import Base: convert
 import Base: +, *, ^, -, /, &, |, ==, !
+import Base: sqrt
 
 # Core interface
 export @var, Variable, Literal

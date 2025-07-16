@@ -2,6 +2,7 @@ const NEG = Literal(Int8(-1))
 const ZERO = Literal(UInt8(0))
 const ONE = Literal(UInt8(1))
 const TWO = Literal(UInt8(2))
+const HALF = Literal(UInt8(1)//UInt8(2))
 
 macro implement_getconst(getconst)
     getconst = esc(getconst)

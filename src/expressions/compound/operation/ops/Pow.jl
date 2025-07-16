@@ -6,6 +6,8 @@ Complex values are allowed, defined by the standard branch cut in log, to match 
 """
 const Pow = @operator Operation{^, 2}
 
+sqrt(expression::Expression) = expression ^ HALF
+
 base(power::Pow) = args(power)[1]
 exponent(power::Pow) = args(power)[2]
 
