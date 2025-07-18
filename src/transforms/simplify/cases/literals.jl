@@ -13,8 +13,8 @@ Evaluate associative `Op` (possibly approximately), according to `transform`, re
 apply_assoc(simplifier::Simplifier, Op, value1, value2) = nothing
 apply_assoc(::Trivial, Op, value1, value2) = apply_assoc(Op, value1, value2)
 
-function trycombine(simplifier::Simplifier, Op, (value1,)::Literal, (value2,)::Literal)
-    mapsome(apply_assoc(simplifier, Op, value1, value2)) do newvalue
+function trycombine(simplifier::Simplifier, Op, literal1::Literal, literal2::Literal)
+    mapsome(apply_assoc(simplifier, Op, literal1.value, literal2.value)) do newvalue
         Literal(newvalue)
     end
 end

@@ -16,6 +16,3 @@ function show(io::IO, ::MIME"text/plain", literal::Literal)
     print(io, "Literal ")
     show(io, MIME("text/plain"), literal.value)
 end
-
-iterate(literal::Literal) = (literal.value, nothing)
-iterate(literal::Literal, state) = nothing
