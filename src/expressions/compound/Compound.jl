@@ -13,3 +13,5 @@ map(f, compound::Compound) = similar(compound, map(f, args(compound)))
 
 iterate(compound::Compound) = iterate(args(compound))
 iterate(compound::Compound, state) = iterate(args(compound), state)
+
+dependencies(compound::Compound) = mapreduce(dependencies, union, args(compound), init=Dependencies())

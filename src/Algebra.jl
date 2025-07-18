@@ -16,6 +16,7 @@ import Base: sqrt
 # Core interface
 export @var, Variable, Literal
 export apply, simplify, approximate, substitute
+export dependencies
 
 # Expressions types - ideally rarely needed
 export Expression, valtype, args
@@ -25,10 +26,10 @@ include("util/typing.jl")
 include("util/nullable.jl")
 include("util/iterating.jl")
 include("expressions/Expression.jl")
-include("expressions/atoms/literals/Literal.jl")
-include("expressions/atoms/literals/constants.jl")
 include("expressions/atoms/variables/Variable.jl")
 include("expressions/atoms/variables/constructors.jl")
+include("expressions/atoms/literals/Literal.jl")
+include("expressions/atoms/literals/constants.jl")
 include("expressions/compound/Compound.jl")
 include("expressions/errors.jl")
 include("expressions/conversions.jl")

@@ -30,6 +30,5 @@ print(io::IO, variable::Variable) = print(io, name(variable))
 show(io::IO, ::MIME"text/plain", variable::VariableByName{T}) where T = print(io, "$(name(variable)) ∈ $T")
 show(io::IO, ::MIME"text/plain", variable::UniqueVariable{T}) where T = print(io, "$(name(variable))#$(objectid(variable)) ∈ $T")
 
-
-
-
+const Dependencies = Set{Variable}
+dependencies(variable::Variable) = Dependencies((variable,))
