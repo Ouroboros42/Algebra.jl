@@ -3,15 +3,14 @@ module Algebra
 using Logging
 using Base.Order
 
-import Base: valtype
+import Base: valtype, iterate
 import Base: isless, isequal, hash
-import Base: iterate
 import Base: isinteger, isreal
 import Base: zero, one, iszero, isone
 import Base: print, show
 import Base: convert
 import Base: +, *, ^, -, /, &, |, ==, !
-import Base: sqrt
+import Base: sqrt, ifelse
 
 # Core interface
 export @var, Variable, Literal
@@ -45,6 +44,7 @@ include("expressions/compound/associative/ops/Or.jl")
 include("expressions/compound/operation/ops/Pow.jl")
 include("expressions/compound/operation/ops/Equality.jl")
 include("expressions/compound/operation/ops/Not.jl")
+include("expressions/compound/operation/ops/IfElse.jl")
 include("transforms/checks.jl")
 include("transforms/Transform.jl")
 include("transforms/compound.jl")
