@@ -4,16 +4,10 @@ end
 
 Transitive{Op}(args...) where Op = Transitive{Op}(collect(Iterators.map(Expression, args)))
 
-optype(::Type{<:Transitive{Op}}) where Op = Transitive{Op}
+logicaltype(::Type{<:Transitive{Op}}) where Op = Transitive{Op}
+op(operation::Transitive) = op(typeof(operation))
+op(::Type{<:Transitive{Op}}) where Op = Op
 
 args(relation::Transitive) = relation.arguments
 
-function print(io::IO, transitive::Transitive{Op}) where Op
-    if isempty(args(transitive))
-        return print(io, "`EMPTY $Op`")
-    end
-
-    argstr = join(args(transitive), " $Op ")
-
-    print(io, "($argstr)")
-end
+print(io::IO, transitive::Transitive) = print(io, infixstr(transitive))

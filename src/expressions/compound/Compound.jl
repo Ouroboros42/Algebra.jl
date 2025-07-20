@@ -10,23 +10,29 @@ Alternatively override `map` directly to create a copy with transformed argument
 abstract type Compound{T} <: Expression{T} end
 
 """
-Subtypes should implement `optype` to provide a standard copy constructor, as well as an identifier for common methods.
+Subtypes should implement `logicaltype` to provide a standard copy constructor, as well as an identifier for common methods.
 """
-optype(compound::Compound) = optype(typeof(compound))
-similar(compound::Compound, args...) = optype(compound)(args...)  
+logicaltype(compound::Compound) = logicaltype(typeof(compound))
+similar(compound::Compound, args...) = logicaltype(compound)(args...)  
 map(f, compound::Compound) = similar(compound, map(f, args(compound)))
 
-isequal(first::Compound, second::Compound) = optype(first) === optype(second) && isequal(args(first), args(second))
+isequal(first::Compound, second::Compound) = logicaltype(first) === logicaltype(second) && isequal(args(first), args(second))
 function isless(first::Compound, second::Compound)
-    typeid1 = objectid(optype(first))
-    typeid2 = objectid(optype(second))
+    typeid1 = objectid(logicaltype(first))
+    typeid2 = objectid(logicaltype(second))
 
     isless(typeid1, typeid2) || ((typeid1 == typeid2) && isless(args(first), args(second)))
 end
 
-hash(compound::Compound, h::UInt) = hash(optype(compound), hash(args(operation), h))
+hash(compound::Compound, h::UInt) = hash(logicaltype(compound), hash(args(operation), h))
 
 iterate(compound::Compound) = iterate(args(compound))
 iterate(compound::Compound, state) = iterate(args(compound), state)
 
 dependencies(compound::Compound) = mapreduce(dependencies, union, args(compound), init=Dependencies())
+
+funcstr(funcname, args) = "$funcname($(join(args, ", ")))"
+funcstr(compound) = funcstr(op(compound), args(compound))
+
+infixstr(op, args) = isempty(args) ? "(EMPTY $op)" : "($(join(args, " $op ")))"
+infixstr(compound) = infixstr(op(compound), args(compound))

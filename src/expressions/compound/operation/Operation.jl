@@ -10,13 +10,11 @@ Operation{Op, N}(arguments::NTuple{N, Expression}) where {Op, N} = Operation{Op,
 Operation{Op, N}(arguments::Expression...) where {Op, N} = Operation{Op, N}(arguments)
 (F::Type{<:Operation})(arguments...) = F(map(Expression, arguments)...)
 
-optype(::Type{<:Operation{Op, N}}) where {Op, N} = Operation{Op, N}
+logicaltype(::Type{<:Operation{Op, N}}) where {Op, N} = Operation{Op, N}
+op(operation::Operation) = op(typeof(operation))
+op(::Type{<:Operation{Op}}) where Op = Op
 
 args(func::Operation) = func.arguments
 arg(func::Operation{Op, 1}) where Op = only(args(func))
 
-function print(io::IO, (; arguments)::Operation{Op}) where Op
-    argstr = join(map(string, arguments), ", ")
-
-    print(io, "$Op($argstr)")
-end
+print(io::IO, operation::Operation) = print(io, funcstr(operation))

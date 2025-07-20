@@ -9,9 +9,13 @@ Associative{Op}(arguments) where Op = Associative{Op, assoc_valtype(Op, argument
 Associative{Op}(arguments::Expression...) where Op = Associative{Op, assoc_valtype(Op, arguments)}(collect(arguments))
 (A::Type{<:Associative})(arguments...) = A(map(Expression, arguments)...)
 
-optype(::Type{<:Associative{Op}}) where Op = Associative{Op}
+logicaltype(::Type{<:Associative{Op}}) where Op = Associative{Op}
+op(operation::Associative) = op(typeof(operation))
+op(::Type{<:Associative{Op}}) where Op = Op
 
 args(operation::Associative) = operation.arguments
+
+print(io::IO, associative::Associative) = print(io, infixstr(associative))
 
 replacesomeargs(operation::Associative, replacements...) = similar(operation, replacesome(args(operation), replacements...))
 
@@ -26,19 +30,9 @@ iscentral(::Associative{Op}) where Op = element -> iscentral(Op, element)
 
 isplitargs(operation::Associative) = ipartition(iscentral(operation), operation.arguments)
 
-function print(io::IO, associative::Associative{Op}) where Op
-    if isempty(args(associative))
-        return print(io, "`EMPTY $Op`")
-    end
-
-    argstr = join(args(associative), " $Op ")
-
-    print(io, "($argstr)")
-end
-
 struct CentralFirst{Op} <: Ordering end
 
-CentralFirst(::Associative{Op}) where Op = CentralFirst{Op}()
+CentralFirst(assoc::Associative) = CentralFirst{op(assoc)}()
 
 function Order.lt(::CentralFirst{Op}, a::Expression, b::Expression) where Op
     if !iscentral(Op, a); return false end
