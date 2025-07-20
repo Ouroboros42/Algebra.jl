@@ -15,9 +15,6 @@ optype(::Type{<:Operation{Op, N}}) where {Op, N} = Operation{Op, N}
 args(func::Operation) = func.arguments
 arg(func::Operation{Op, 1}) where Op = only(args(func))
 
-isequal(first::Operation{Op, N}, second::Operation{Op, N}) where {Op, N} = isequal(args(first), args(second))
-isless(first::Operation{Op, N}, second::Operation{Op, N}) where {Op, N} = isless(args(first), args(second))
-
 function print(io::IO, (; arguments)::Operation{Op}) where Op
     argstr = join(map(string, arguments), ", ")
 

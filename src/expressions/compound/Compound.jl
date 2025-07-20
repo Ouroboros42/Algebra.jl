@@ -16,6 +16,14 @@ optype(compound::Compound) = optype(typeof(compound))
 similar(compound::Compound, args...) = optype(compound)(args...)  
 map(f, compound::Compound) = similar(compound, map(f, args(compound)))
 
+isequal(first::Compound, second::Compound) = optype(first) === optype(second) && isequal(args(first), args(second))
+function isless(first::Compound, second::Compound)
+    typeid1 = objectid(optype(first))
+    typeid2 = objectid(optype(second))
+
+    isless(typeid1, typeid2) || ((typeid1 == typeid2) && isless(args(first), args(second)))
+end
+
 hash(compound::Compound, h::UInt) = hash(optype(compound), hash(args(operation), h))
 
 iterate(compound::Compound) = iterate(args(compound))

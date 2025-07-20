@@ -15,9 +15,6 @@ args(operation::Associative) = operation.arguments
 
 replacesomeargs(operation::Associative, replacements...) = similar(operation, replacesome(args(operation), replacements...))
 
-isequal(first::Associative{Op}, second::Associative{Op}) where Op = isequal(args(first), args(second))
-isless(first::Associative{Op}, second::Associative{Op}) where Op = isless(args(first), args(second))
-
 isidentity(Op, ::Expression) = false
 isidentity(::Associative{Op}) where Op = element -> isidentity(Op, element)
 
