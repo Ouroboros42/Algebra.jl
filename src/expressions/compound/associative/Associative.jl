@@ -9,14 +9,14 @@ Associative{Op}(arguments) where Op = Associative{Op, assoc_valtype(Op, argument
 Associative{Op}(arguments::Expression...) where Op = Associative{Op, assoc_valtype(Op, arguments)}(collect(arguments))
 (A::Type{<:Associative})(arguments...) = A(map(Expression, arguments)...)
 
-similar(::Associative{Op}, arguments...) where Op = Associative{Op}(arguments...)
+optype(::Type{<:Associative{Op}}) where Op = Associative{Op}
+
 args(operation::Associative) = operation.arguments
 
 replacesomeargs(operation::Associative, replacements...) = similar(operation, replacesome(args(operation), replacements...))
 
 isequal(first::Associative{Op}, second::Associative{Op}) where Op = isequal(args(first), args(second))
 isless(first::Associative{Op}, second::Associative{Op}) where Op = isless(args(first), args(second))
-hash(associative::Associative{Op}, h::UInt) where Op = hash(Op, hash(args(associative), h))
 
 isidentity(Op, ::Expression) = false
 isidentity(::Associative{Op}) where Op = element -> isidentity(Op, element)

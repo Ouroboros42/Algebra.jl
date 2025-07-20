@@ -9,7 +9,14 @@ Alternatively override `map` directly to create a copy with transformed argument
 """
 abstract type Compound{T} <: Expression{T} end
 
+"""
+Subtypes should implement `optype` to provide a standard copy constructor, as well as an identifier for common methods.
+"""
+optype(compound::Compound) = optype(typeof(compound))
+similar(compound::Compound, args...) = optype(compound)(args...)  
 map(f, compound::Compound) = similar(compound, map(f, args(compound)))
+
+hash(compound::Compound, h::UInt) = hash(optype(compound), hash(args(operation), h))
 
 iterate(compound::Compound) = iterate(args(compound))
 iterate(compound::Compound, state) = iterate(args(compound), state)

@@ -10,14 +10,13 @@ Operation{Op, N}(arguments::NTuple{N, Expression}) where {Op, N} = Operation{Op,
 Operation{Op, N}(arguments::Expression...) where {Op, N} = Operation{Op, N}(arguments)
 (F::Type{<:Operation})(arguments...) = F(map(Expression, arguments)...)
 
-similar(::Operation{Op, N}, arguments...) where {Op, N} = Operation{Op, N}(arguments...)
+optype(::Type{<:Operation{Op, N}}) where {Op, N} = Operation{Op, N}
 
 args(func::Operation) = func.arguments
 arg(func::Operation{Op, 1}) where Op = only(args(func))
 
 isequal(first::Operation{Op, N}, second::Operation{Op, N}) where {Op, N} = isequal(args(first), args(second))
 isless(first::Operation{Op, N}, second::Operation{Op, N}) where {Op, N} = isless(args(first), args(second))
-hash(operation::Operation{Op}, h::UInt) where Op = hash(Op, hash(args(operation), h))
 
 function print(io::IO, (; arguments)::Operation{Op}) where Op
     argstr = join(map(string, arguments), ", ")
