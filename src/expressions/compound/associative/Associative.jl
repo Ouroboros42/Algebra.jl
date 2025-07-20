@@ -26,14 +26,14 @@ iscentral(::Associative{Op}) where Op = element -> iscentral(Op, element)
 
 isplitargs(operation::Associative) = ipartition(iscentral(operation), operation.arguments)
 
-function print(io::IO, (; arguments)::Associative{Op}) where Op
-    if isempty(arguments)
+function print(io::IO, associative::Associative{Op}) where Op
+    if isempty(args(associative))
         return print(io, "`EMPTY $Op`")
     end
 
-    args = join(map(string, arguments), " $Op ")
+    argstr = join(args(associative), " $Op ")
 
-    print(io, "($args)")
+    print(io, "($argstr)")
 end
 
 struct CentralFirst{Op} <: Ordering end

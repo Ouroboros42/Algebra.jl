@@ -41,15 +41,13 @@ macro implement_op(opfun, Optype, nargs)
     end 
 end
 
-macro operator(expr::Expr)
+macro operator(expr::Expr, nargs = get(expr.args, 3, 2))
     if expr.head !== :curly || length(expr.args) < 2
         throw(ArgumentError("Malformed operator Expression type: $expr"))
     end
 
     Optype = esc(expr)
     opfun = esc(expr.args[2])
-
-    nargs = expr.args[1] === :Associative ? 2 : expr.args[3]
 
     :( @implement_op($opfun, $Optype, $nargs) )
 end
