@@ -11,3 +11,6 @@ op(::Type{<:Transitive{Op}}) where Op = Op
 args(relation::Transitive) = relation.arguments
 
 print(io::IO, transitive::Transitive) = print(io, infixstr(transitive))
+
+issymmetric(::Transitive) = false
+isreflexive(::Transitive) = false

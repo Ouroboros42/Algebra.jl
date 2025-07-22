@@ -1,58 +1,44 @@
 import Combinat: Combinations
 
 """
-Override for types which can be combined together under the given operation.
-Returns `nothing` if no transform for the combination is possible.
-"""
-trycombine(::Simplifier, Op, ::Expression, ::Expression) = nothing
-
-"""
 Override if `initial` has equivalent forms more suitable to combine with `target`.
 Returns a sequence of all possible forms.
 """
-matchingforms(::Simplifier, Op, target::Expression, initial::Expression) = ()
-matchingforms(::Simplifier, Op, target::Associative, initial::Expression) = (similar(target, initial),)
+matchingforms(::Simplifier, ::Type{<:Associative}, target::Expression, initial::Expression) = ()
+matchingforms(::Simplifier, ::Type{<:Associative}, target::Associative, initial::Expression) = (similar(target, initial),)
 
-"""
-Override if `initial` has equivalent forms more suitable to combine with `target`.
-Returns a sequence of all possible forms.
-"""
-alternateforms(::Simplifier, Op, initial::Expression) = () # initial isa Associative{Op} ? () : (Associative{Op}(initial),)
+function matchtrycombine(simplifier::Simplifier, outer::Type{<:Associative}, expr1::Expression, expr2::Expression)
+    @tryreturn trycombine(simplifier, outer, expr1, expr2)
 
-allmatchingforms(simplifier, Op, target, initial) = (alternateforms(simplifier, Op, initial)..., matchingforms(simplifier, Op, target, initial)...)
-
-function matchtrycombine(simplifier::Simplifier, Op, expr1::Expression, expr2::Expression)
-    @tryreturn trycombine(simplifier, Op, expr1, expr2)
-
-    for form2 in allmatchingforms(simplifier, Op, expr1, expr2)
-        @tryreturn trycombine(simplifier, Op, expr1, form2)
+    for form2 in matchingforms(simplifier, outer, expr1, expr2)
+        @tryreturn trycombine(simplifier, outer, expr1, form2)
     end
 
-    for form1 in allmatchingforms(simplifier, Op, expr2, expr1)
-        @tryreturn trycombine(simplifier, Op, form1, expr2)
+    for form1 in matchingforms(simplifier, outer, expr2, expr1)
+        @tryreturn trycombine(simplifier, outer, form1, expr2)
     end
 end
 
-debugmatchtrycombine(simplifier, Op, expr1, expr2) = forsome(matchtrycombine(simplifier, Op, expr1, expr2)) do combined
-    @debug "Combined using $simplifier: $Op($expr1, $expr2) -> $combined"
+debugmatchtrycombine(simplifier, outer, expr1, expr2) = forsome(matchtrycombine(simplifier, outer, expr1, expr2)) do combined
+    @debug "Combined using $simplifier: $(op(outer))($expr1, $expr2) -> $combined"
 end
 
-isnested(::Associative{Op}) where Op = isinst(Associative{Op})
+isnested(assoc::Associative) = isinst(logicaltype(assoc))
 
 toargs(::Associative, expr::Expression) = [ expr ]
 toargs(::Associative{Op}, expr::Associative{Op}) where Op = expr.arguments
-toargs(op) = expr -> toargs(op, expr) 
+toargs(operation) = expr -> toargs(operation, expr) 
 
 flatten(operation::Associative) = similar(operation, collect(Iterators.flatmap(toargs(operation), args(operation))))
 
-function tryapply(simplifier::Simplifier, operation::Associative{Op}) where Op
+function tryapply(simplifier::Simplifier, operation::Associative)
     splitopargs = isplitargs(operation)
     central, ordered = splitopargs
     anycentral, anyordered = @. !isempty(splitopargs)
 
     if anycentral
         for ((i1, expr1), (i2, expr2)) in Combinations(central, 2)
-            @tryreturn mapsome(debugmatchtrycombine(simplifier, Op, expr1, expr2)) do combined
+            @tryreturn mapsome(debugmatchtrycombine(simplifier, logicaltype(operation), expr1, expr2)) do combined
                 replacesomeargs(operation, i1 => combined, i2 => nothing)
             end
         end
@@ -60,7 +46,7 @@ function tryapply(simplifier::Simplifier, operation::Associative{Op}) where Op
     
     if anyordered
         for ((i1, expr1), (i2, expr2)) in adjacent(ordered)
-            @tryreturn mapsome(debugmatchtrycombine(simplifier, Op, expr1, expr2)) do combined
+            @tryreturn mapsome(debugmatchtrycombine(simplifier, logicaltype(operation), expr1, expr2)) do combined
                 replacesomeargs(operation, i1 => combined, i2 => nothing)
             end
         end
@@ -68,14 +54,14 @@ function tryapply(simplifier::Simplifier, operation::Associative{Op}) where Op
 
     if anycentral && anyordered
         for ((icentral, centralexpr), (iordered, orderedexpr)) in Iterators.product(central, ordered)
-            @tryreturn mapsome(debugmatchtrycombine(simplifier, Op, centralexpr, orderedexpr)) do combined
+            @tryreturn mapsome(debugmatchtrycombine(simplifier, logicaltype(operation), centralexpr, orderedexpr)) do combined
                 replacesomeargs(operation, icentral => nothing, iordered => combined)
             end
         end
     end
 end
 
-function tryapply(simplifier::Trivial, operation::Associative{Op, T}) where {Op, T}
+function tryapply(simplifier::Trivial, operation::Associative{Op}) where Op
     if isempty(operation.arguments)
         throw(EmptyOperationError{Op}())
     end

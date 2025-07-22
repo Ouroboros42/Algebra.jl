@@ -4,3 +4,6 @@ const Equality = @operator Transitive{==}
 isequal(expr::Expression, other) = false
 isequal(other, expr::Expression) = false
 isequal(expr1::Expression, expr2::Expression) = false
+
+issymmetric(::Equality) = true
+isreflexive(::Equality) = true
