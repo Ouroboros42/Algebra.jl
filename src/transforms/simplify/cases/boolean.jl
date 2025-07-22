@@ -1,5 +1,5 @@
-apply_operation(::typeof(==), a, b) = a == b
+tryevaluate(::Type{<:Equality}, a, b) = a == b
 
-apply_operation(::typeof(!), a::Bool) = !a
+tryevaluate(::Type{<:Not}, a::Bool) = !a
 
-tryapply(::Trivial, notnot::Not{Bool, <:Tuple{Not}}) = arg(arg(notnot))
+trycombine(::Trivial, ::Type{<:Not}, not::Not) = arg(not)

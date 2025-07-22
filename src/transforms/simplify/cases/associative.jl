@@ -19,7 +19,7 @@ function matchtrycombine(simplifier::Simplifier, outer::Type{<:Associative}, exp
     end
 end
 
-debugmatchtrycombine(simplifier, outer, expr1, expr2) = forsome(matchtrycombine(simplifier, outer, expr1, expr2)) do combined
+debugmatchtrycombine(simplifier, outer, expr1, expr2) = forsome(matchtrycombine(simplifier, logicaltype(outer), expr1, expr2)) do combined
     @debug "Combined using $simplifier: $(op(outer))($expr1, $expr2) -> $combined"
 end
 
@@ -38,7 +38,7 @@ function tryapply(simplifier::Simplifier, operation::Associative)
 
     if anycentral
         for ((i1, expr1), (i2, expr2)) in Combinations(central, 2)
-            @tryreturn mapsome(debugmatchtrycombine(simplifier, logicaltype(operation), expr1, expr2)) do combined
+            @tryreturn mapsome(debugmatchtrycombine(simplifier, operation, expr1, expr2)) do combined
                 replacesomeargs(operation, i1 => combined, i2 => nothing)
             end
         end
@@ -46,7 +46,7 @@ function tryapply(simplifier::Simplifier, operation::Associative)
     
     if anyordered
         for ((i1, expr1), (i2, expr2)) in adjacent(ordered)
-            @tryreturn mapsome(debugmatchtrycombine(simplifier, logicaltype(operation), expr1, expr2)) do combined
+            @tryreturn mapsome(debugmatchtrycombine(simplifier, operation, expr1, expr2)) do combined
                 replacesomeargs(operation, i1 => combined, i2 => nothing)
             end
         end
@@ -61,9 +61,9 @@ function tryapply(simplifier::Simplifier, operation::Associative)
     end
 end
 
-function tryapply(simplifier::Trivial, operation::Associative{Op}) where Op
+function tryapply(simplifier::Trivial, operation::Associative)
     if isempty(operation.arguments)
-        throw(EmptyOperationError{Op}())
+        throw(EmptyOperationError{op(operation)}())
     end
 
     @tryreturn onlyornothing(operation.arguments)

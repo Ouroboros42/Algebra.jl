@@ -1,4 +1,4 @@
-function tryapply(::Trivial, (base, exponent)::Pow)
+function trycombine(::Trivial, ::Type{<:Pow}, base::Expression, exponent::Expression)
     if iszero(exponent); return one(base) end
 
     if isone(exponent); return base end
@@ -8,13 +8,15 @@ function tryapply(::Trivial, (base, exponent)::Pow)
     # TODO handle zero base
 end
 
-function tryapply(simplifier::Trivial, power::Pow{T, <:Tuple{Pow, Expression}}) where T
-    @tryreturn @invoke tryapply(simplifier, power::Pow)
+trycombine(simplifier::Trivial, outer::Type{<:Pow}, base::Literal, exponent::Literal) = @invoke trycombine(simplifier, outer::Type{<:Compound}, base, exponent)
 
-    ((base, exp1), exp2) = power
+function trycombine(simplifier::Trivial, outer::Type{<:Pow}, base::Pow, outerexp::Expression)
+    @tryreturn @invoke trycombine(simplifier, outer, base::Expression, outerexp)
 
-    if isinteger(exp2) || (isreal(exp1) && ispositive(base))
-        base ^ (exp1 * exp2)
+    innerbase, innerexp = base
+
+    if isinteger(outerexp) || (isreal(innerexp) && ispositive(innerbase))
+        innerbase ^ (innerexp * outerexp)
     end
 end
 
