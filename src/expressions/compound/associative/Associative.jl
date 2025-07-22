@@ -20,13 +20,13 @@ print(io::IO, associative::Associative) = print(io, infixstr(associative))
 replacesomeargs(operation::Associative, replacements...) = similar(operation, replacesome(args(operation), replacements...))
 
 isidentity(Op, ::Expression) = false
-isidentity(::Associative{Op}) where Op = element -> isidentity(Op, element)
+isidentity(assoc::Associative) = element -> isidentity(op(assoc), element)
 
 isabsorbing(Op, ::Expression) = false
-isabsorbing(::Associative{Op}) where Op = element -> isabsorbing(Op, element)
+isabsorbing(assoc::Associative) = element -> isabsorbing(op(assoc), element)
 
 iscentral(Op, element::Expression) = isidentity(Op, element) || isabsorbing(Op, element)
-iscentral(::Associative{Op}) where Op = element -> iscentral(Op, element)
+iscentral(assoc::Associative) = element -> iscentral(op(assoc), element)
 
 isplitargs(operation::Associative) = ipartition(iscentral(operation), operation.arguments)
 
