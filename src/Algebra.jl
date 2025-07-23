@@ -19,7 +19,8 @@ export dependencies
 
 # Expressions types - ideally rarely needed
 export Expression, valtype, args
-export Sum, Prod, Pow, base, exponent
+export Sum, Prod, And, Or, Equality, Not, IfElse
+export Pow, base, exponent
 
 include("util/typing.jl")
 include("util/nullable.jl")
