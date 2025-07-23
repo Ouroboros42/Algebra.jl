@@ -3,7 +3,7 @@ module Algebra
 using Logging
 using Base.Order
 
-import Base: valtype, iterate
+import Base: valtype, iterate, isvalid
 import Base: isless, isequal, hash
 import Base: isinteger, isreal
 import Base: zero, one, iszero, isone
@@ -33,9 +33,7 @@ include("expressions/compound/Compound.jl")
 include("expressions/errors.jl")
 include("expressions/conversions.jl")
 include("expressions/compound/associative/Associative.jl")
-include("expressions/compound/associative/valtype.jl")
 include("expressions/compound/operation/Operation.jl")
-include("expressions/compound/operation/valtype.jl")
 include("expressions/compound/transitive/Transitive.jl")
 include("expressions/compound/operators.jl")
 include("expressions/compound/associative/ops/Sum.jl")

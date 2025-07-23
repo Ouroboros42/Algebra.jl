@@ -5,8 +5,14 @@ struct Associative{Op, T} <: Compound{T}
     arguments::Vector{Expression}
 end
 
-Associative{Op}(arguments) where Op = Associative{Op, assoc_valtype(Op, arguments)}(arguments)
-Associative{Op}(arguments::Expression...) where Op = Associative{Op, assoc_valtype(Op, arguments)}(collect(arguments))
+function tryinfervaltype(assoc::Type{<:Associative}, args::Vector{<:Expression})
+    if isempty(args); return end
+
+    mapreduce(valtype, infervaltype(assoc), args)
+end
+
+Associative{Op}(arguments::Vector{<:Expression}) where Op = Associative{Op, infervaltype(Associative{Op}, arguments)}(arguments)
+Associative{Op}(arguments::Expression...) where Op = Associative{Op}(collect(Expression, arguments))
 (A::Type{<:Associative})(arguments...) = A(map(Expression, arguments)...)
 
 logicaltype(::Type{<:Associative{Op}}) where Op = Associative{Op}

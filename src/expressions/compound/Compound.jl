@@ -36,3 +36,12 @@ funcstr(compound) = funcstr(op(compound), args(compound))
 
 infixstr(op, args) = isempty(args) ? "(EMPTY $op)" : "($(join(args, " $op ")))"
 infixstr(compound) = infixstr(op(compound), args(compound))
+
+infervaltype(operation::Type{<:Compound}, args...) = @ordefault tryinfervaltype(operation, args...) throw(ResultTypeUndefinedError{operation}(args...))
+infervaltype(operation::Type{<:Compound}) = (args...) -> infervaltype(operation, args...)
+
+tryinfervaltype(operation::Type{<:Compound}, ArgTypes::Type...) = nothing
+tryinfervaltype(operation::Type{<:Compound}, args::NTuple{N, Expression} where N) = tryinfervaltype(operation, map(valtype, args)...)
+tryinfervaltype(operation::Type{<:Compound}, args::Expression...) = tryinfervaltype(operation, args)
+
+isvalid(operation::Type{<:Compound}, args...) = !isnothing(infervaltype(operation, args...))

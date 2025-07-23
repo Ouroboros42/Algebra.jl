@@ -4,7 +4,7 @@ const oldRingOps = Union{typeof(+), typeof(*)}
 iscentral(::typeof(+), ::Expression{<:CLinear}) = true
 iscentral(::typeof(*), ::Expression{<:LogicalComplex}) = true
 
-assoc_valtype(::oldRingOps, N1::Type{<:Number}, N2::Type{<:Number}) = ring_promote(N1, N2)
+tryinfervaltype(::Type{<:RingOps}, N1::Type{<:Number}, N2::Type{<:Number}) = ring_promote(N1, N2)
 
 ring_promote(U1::Type{<:Unsigned}, U2::Type{<:Unsigned}) = promote_type(U1, U2)
 ring_promote(N1::Type{<:LogicalInt}, N2::Type{<:LogicalInt}) = promote_type(signed(N1), signed(N2))

@@ -1,7 +1,7 @@
-operation_valtype(::typeof(^), base::Type{<:Complex}, ::Type{<:LogicalInt}) = base
-operation_valtype(::typeof(^), base::Type{<:Real}, ::Type{<:LogicalInt}) = base
-operation_valtype(::typeof(^), base::Type{<:LogicalInt}, ::Type{<:Signed}) = Union{base, Rational{base}}
-operation_valtype(::typeof(^), base::Type{<:Real}, exponent::Type{<:Real}) = promote_type(base, exponent)
+tryinfervaltype(::Type{<:Pow}, base::Type{<:Complex}, ::Type{<:LogicalInt}) = base
+tryinfervaltype(::Type{<:Pow}, base::Type{<:Real}, ::Type{<:LogicalInt}) = base
+tryinfervaltype(::Type{<:Pow}, base::Type{<:LogicalInt}, ::Type{<:Signed}) = Union{base, Rational{base}}
+tryinfervaltype(::Type{<:Pow}, base::Type{<:Real}, exponent::Type{<:Real}) = promote_type(base, exponent)
 
 function tryevaluate(::Trivial, ::Type{<:Pow}, base::ComplexExact, exponent::ComplexExact)
     intexponent = @returnnothing maybeinteger(exponent)
