@@ -24,7 +24,7 @@ function isless(first::Compound, second::Compound)
     isless(typeid1, typeid2) || ((typeid1 == typeid2) && isless(args(first), args(second)))
 end
 
-hash(compound::Compound, h::UInt) = hash(logicaltype(compound), hash(args(operation), h))
+hash(compound::Compound, h::UInt) = hash(logicaltype(compound), hash(args(compound), h))
 
 iterate(compound::Compound) = iterate(args(compound))
 iterate(compound::Compound, state) = iterate(args(compound), state)
