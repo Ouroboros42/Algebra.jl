@@ -10,32 +10,20 @@ toargs(operation) = expr -> toargs(operation, expr)
 
 flatten(operation::Associative) = similar(operation, collect(Iterators.flatmap(toargs(operation), args(operation))))
 
+function combinable(operation::Associative)
+    central, ordered = isplitargs(operation)
+
+    Iterators.flatten((
+        Combinations(central, 2),
+        adjacent(ordered),
+        Iterators.product(central, ordered)
+    ))
+end
+
 function tryapply(simplifier::Simplifier, operation::Associative)
-    splitopargs = isplitargs(operation)
-    central, ordered = splitopargs
-    anycentral, anyordered = @. !isempty(splitopargs)
-
-    if anycentral
-        for ((i1, expr1), (i2, expr2)) in Combinations(central, 2)
-            @tryreturn mapsome(matchtrycombine(simplifier, operation, expr1, expr2)) do combined
-                replacesomeargs(operation, i1 => combined, i2 => nothing)
-            end
-        end
-    end
-    
-    if anyordered
-        for ((i1, expr1), (i2, expr2)) in adjacent(ordered)
-            @tryreturn mapsome(matchtrycombine(simplifier, operation, expr1, expr2)) do combined
-                replacesomeargs(operation, i1 => combined, i2 => nothing)
-            end
-        end
-    end
-
-    if anycentral && anyordered
-        for ((icentral, centralexpr), (iordered, orderedexpr)) in Iterators.product(central, ordered)
-            @tryreturn mapsome(matchtrycombine(simplifier, logicaltype(operation), centralexpr, orderedexpr)) do combined
-                replacesomeargs(operation, icentral => nothing, iordered => combined)
-            end
+    for ((i1, expr1), (i2, expr2)) in combinable(operation)
+        @tryreturn mapsome(matchtrycombine(simplifier, operation, expr1, expr2)) do combined
+            replacesomeargs(operation, i1 => nothing, i2 => combined)
         end
     end
 end
