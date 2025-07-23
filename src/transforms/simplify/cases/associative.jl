@@ -1,27 +1,6 @@
 import Combinat: Combinations
 
-"""
-Override if `initial` has equivalent forms more suitable to combine with `target`.
-Returns a sequence of all possible forms.
-"""
-matchingforms(::Simplifier, ::Type{<:Associative}, target::Expression, initial::Expression) = ()
-matchingforms(::Simplifier, ::Type{<:Associative}, target::Associative, initial::Expression) = (similar(target, initial),)
-
-function matchtrycombine(simplifier::Simplifier, outer::Type{<:Associative}, expr1::Expression, expr2::Expression)
-    @tryreturn trycombine(simplifier, outer, expr1, expr2)
-
-    for form2 in matchingforms(simplifier, outer, expr1, expr2)
-        @tryreturn trycombine(simplifier, outer, expr1, form2)
-    end
-
-    for form1 in matchingforms(simplifier, outer, expr2, expr1)
-        @tryreturn trycombine(simplifier, outer, form1, expr2)
-    end
-end
-
-debugmatchtrycombine(simplifier, outer, expr1, expr2) = forsome(matchtrycombine(simplifier, logicaltype(outer), expr1, expr2)) do combined
-    @debug "Combined using $simplifier: $(op(outer))($expr1, $expr2) -> $combined"
-end
+matchingforms(::Simplifier, ::Type{<:Sum}, target::Prod, initial::Expression) = (similar(target, initial),)
 
 isnested(assoc::Associative) = isinst(logicaltype(assoc))
 
@@ -38,7 +17,7 @@ function tryapply(simplifier::Simplifier, operation::Associative)
 
     if anycentral
         for ((i1, expr1), (i2, expr2)) in Combinations(central, 2)
-            @tryreturn mapsome(debugmatchtrycombine(simplifier, operation, expr1, expr2)) do combined
+            @tryreturn mapsome(matchtrycombine(simplifier, operation, expr1, expr2)) do combined
                 replacesomeargs(operation, i1 => combined, i2 => nothing)
             end
         end
@@ -46,7 +25,7 @@ function tryapply(simplifier::Simplifier, operation::Associative)
     
     if anyordered
         for ((i1, expr1), (i2, expr2)) in adjacent(ordered)
-            @tryreturn mapsome(debugmatchtrycombine(simplifier, operation, expr1, expr2)) do combined
+            @tryreturn mapsome(matchtrycombine(simplifier, operation, expr1, expr2)) do combined
                 replacesomeargs(operation, i1 => combined, i2 => nothing)
             end
         end
@@ -54,7 +33,7 @@ function tryapply(simplifier::Simplifier, operation::Associative)
 
     if anycentral && anyordered
         for ((icentral, centralexpr), (iordered, orderedexpr)) in Iterators.product(central, ordered)
-            @tryreturn mapsome(debugmatchtrycombine(simplifier, logicaltype(operation), centralexpr, orderedexpr)) do combined
+            @tryreturn mapsome(matchtrycombine(simplifier, logicaltype(operation), centralexpr, orderedexpr)) do combined
                 replacesomeargs(operation, icentral => nothing, iordered => combined)
             end
         end

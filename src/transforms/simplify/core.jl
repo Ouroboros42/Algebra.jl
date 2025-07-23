@@ -11,3 +11,22 @@ trycombine(simplifier, outer::Compound, args...) = trycombine(simplifier, logica
 trycombine(simplifier::Simplifier, outer::Type{<:Compound}, args::Literal...) = mapsome(Literal, tryevaluate(simplifier, outer, map(value, args)...))
 
 tryevaluate(::Simplifier, outer::Type{<:Compound}, args...) = nothing
+
+"""
+Override if `initial` has equivalent forms more suitable to combine with `target`.
+Returns a sequence of all possible forms.
+"""
+matchingforms(::Simplifier, ::Type{<:Compound}, target::Expression, initial::Expression) = ()
+
+matchtrycombine(simplifier::Simplifier, outer::Compound, expr1::Expression, expr2::Expression) = matchtrycombine(simplifier, logicaltype(outer), expr1, expr2)
+function matchtrycombine(simplifier::Simplifier, outer::Type{<:Compound}, expr1::Expression, expr2::Expression)
+    @tryreturn trycombine(simplifier, outer, expr1, expr2)
+
+    for form2 in matchingforms(simplifier, outer, expr1, expr2)
+        @tryreturn trycombine(simplifier, outer, expr1, form2)
+    end
+
+    for form1 in matchingforms(simplifier, outer, expr2, expr1)
+        @tryreturn trycombine(simplifier, outer, form1, expr2)
+    end
+end
