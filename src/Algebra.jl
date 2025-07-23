@@ -3,7 +3,8 @@ module Algebra
 using Logging
 using Base.Order
 
-import Base: valtype, iterate, isvalid
+import Base: valtype, isvalid
+import Base: iterate, length, getindex
 import Base: isless, isequal, hash
 import Base: isinteger, isreal
 import Base: zero, one, iszero, isone
@@ -55,6 +56,7 @@ include("transforms/Substitute.jl")
 include("transforms/simplify/Approximate.jl")
 include("transforms/simplify/core.jl")
 include("transforms/simplify/cases/associative.jl")
+include("transforms/simplify/cases/transitive.jl")
 include("transforms/simplify/cases/multiples.jl")
 include("transforms/simplify/cases/powers.jl")
 include("transforms/simplify/cases/boolean.jl")

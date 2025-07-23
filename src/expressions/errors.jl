@@ -8,7 +8,7 @@ end
 
 ResultTypeUndefinedError{Outer}(args...) where Outer = ResultTypeUndefinedError{Outer, typeof(args)}(args) 
 
-struct EmptyOperationError{Op} <: ResultInferenceError end
+struct EmptyOperationError{Outer} <: ResultInferenceError end
 
 function showerror(io::IO, ::ResultInferenceError)
     print(io, "Result type inference has gone wrong!\nA more detailed error should probably be implemented.")

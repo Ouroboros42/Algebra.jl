@@ -23,8 +23,6 @@ args(operation::Associative) = operation.arguments
 
 print(io::IO, associative::Associative) = print(io, infixstr(associative))
 
-replacesomeargs(operation::Associative, replacements...) = similar(operation, replacesome(args(operation), replacements...))
-
 isidentity(Op, ::Expression) = false
 isidentity(assoc::Associative) = element -> isidentity(op(assoc), element)
 

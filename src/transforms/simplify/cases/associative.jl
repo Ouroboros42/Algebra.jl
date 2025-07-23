@@ -1,5 +1,3 @@
-import Combinat: Combinations
-
 matchingforms(::Simplifier, ::Type{<:Sum}, target::Prod, initial::Expression) = (similar(target, initial),)
 
 isnested(assoc::Associative) = isinst(logicaltype(assoc))
@@ -10,18 +8,18 @@ toargs(operation) = expr -> toargs(operation, expr)
 
 flatten(operation::Associative) = similar(operation, collect(Iterators.flatmap(toargs(operation), args(operation))))
 
-function combinable(operation::Associative)
+function adjacent(operation::Associative)
     central, ordered = isplitargs(operation)
 
     Iterators.flatten((
-        Combinations(central, 2),
+        preindexed_combinations(central, 2),
         adjacent(ordered),
         Iterators.product(central, ordered)
     ))
 end
 
 function tryapply(simplifier::Simplifier, operation::Associative)
-    for ((i1, expr1), (i2, expr2)) in combinable(operation)
+    for ((i1, expr1), (i2, expr2)) in adjacent(operation)
         @tryreturn mapsome(matchtrycombine(simplifier, operation, expr1, expr2)) do combined
             replacesomeargs(operation, i1 => nothing, i2 => combined)
         end
@@ -30,7 +28,7 @@ end
 
 function tryapply(simplifier::Trivial, operation::Associative)
     if isempty(operation.arguments)
-        throw(EmptyOperationError{op(operation)}())
+        throw(EmptyOperationError{logicaltype(operation)}())
     end
 
     @tryreturn onlyornothing(operation.arguments)
@@ -48,8 +46,4 @@ function tryapply(simplifier::Trivial, operation::Associative)
     @tryreturn trysort(operation, CentralFirst(operation))
 
     @tryreturn @invoke tryapply(simplifier::Simplifier, operation)
-end
-
-trysort(operation::Associative, order::Ordering) = if !issorted(operation.arguments; order)
-    similar(operation, sort(operation.arguments; order))
 end

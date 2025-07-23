@@ -3,6 +3,9 @@ jointuples(tuple::Tuple) = tuple
 jointuples(first::Tuple, second::Tuple, others::Tuple...) = jointuples((first..., second...), others...)
 
 adjacent(seq) = Iterators.zip(seq, Iterators.drop(seq, 1))
+preindexed_combinations(seq, n) = Iterators.filter(Iterators.product(ntuple(i -> seq, n)...)) do indexed_groups
+    all(adjacent(indexed_groups)) do ((i1, _), (i2, _)); i1 < i2 end
+end
 
 """
 If `seq1` and `seq2` are identical apart from 1 element at the same position in each, apply `f` to merge the differing items.

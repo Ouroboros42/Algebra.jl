@@ -1,3 +1,6 @@
+const TRUE = Literal(true)
+const FALSE = Literal(false)
+
 const NEG = Literal(Int8(-1))
 const ZERO = Literal(UInt8(0))
 const ONE = Literal(UInt8(1))

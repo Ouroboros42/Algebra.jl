@@ -29,6 +29,14 @@ hash(compound::Compound, h::UInt) = hash(logicaltype(compound), hash(args(compou
 iterate(compound::Compound) = iterate(args(compound))
 iterate(compound::Compound, state) = iterate(args(compound), state)
 
+iargs(compound::Compound) = enumerate(args(compound))
+
+trysort(compound::Compound, order::Ordering = Forward) = if !issorted(compound.arguments; order)
+    similar(compound, sort(compound.arguments; order))
+end
+
+replacesomeargs(compound::Compound, replacements...) = similar(compound, replacesome(args(compound), replacements...))
+
 dependencies(compound::Compound) = mapreduce(dependencies, union, args(compound), init=Dependencies())
 
 funcstr(funcname, args) = "$funcname($(join(args, ", ")))"

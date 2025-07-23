@@ -47,3 +47,8 @@ end
 @testset "polynomials" begin
     @test simplify_equal(x^2 + x + x^2 + 3 + 2 * x^2, 4 * x^2 + x + 3)
 end
+
+@testset "equality" begin
+    @test simplify_equal((x == y) & (y == 1), (x == y) & (x == 1))
+    @test simplify_equal((x == 1) & (x == 2), Literal(false))
+end

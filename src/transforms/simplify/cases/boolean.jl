@@ -1,5 +1,5 @@
-tryevaluate(::Type{<:Equality}, a, b) = a == b
+tryevaluate(::Trivial, ::Type{<:Equality}, a, b) = a == b
 
-tryevaluate(::Type{<:Not}, a::Bool) = !a
+tryevaluate(::Trivial, ::Type{<:Not}, a::Bool) = !a
 
 trycombine(::Trivial, ::Type{<:Not}, not::Not) = arg(not)
