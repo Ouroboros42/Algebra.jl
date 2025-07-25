@@ -3,7 +3,8 @@ const TYPE_SHORTHANDS = Dict(
     :C => :Complex,
     :Z => :Signed,
     :N => :Unsigned,
-    :Q => :Rational
+    :Q => :Rational,
+    :B => :Bool
 )
 
 macro var(name::QuoteNode, type = :Real, equality_by_name = :true)
@@ -14,8 +15,16 @@ macro var(name::QuoteNode, type = :Real, equality_by_name = :true)
     end
 end
 
-macro var(name::Symbol, type = :Real, equality_by_name = :true)
+macro var(name::Symbol, args...)
     quote
-        @var($(QuoteNode(name)), $type, $equality_by_name)
+        @var($(QuoteNode(name)), $(args...))
     end
+end
+
+macro var(names::Expr, args...)
+    if names.head != :tuple; throw(ArgumentError("names must be a symbol or tuple of symbols, got $names")) end
+
+    Expr(:tuple, map(names.args) do name
+        :( @var($name, $(args...)) )
+    end...)
 end
