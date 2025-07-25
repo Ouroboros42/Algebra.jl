@@ -27,8 +27,12 @@ isless(first::UniqueVariable{T}, second::UniqueVariable{T}) where T = isless(obj
 isless(first::VariableByName{T}, second::VariableByName{T}) where T = isless(name(first), name(second))
 
 print(io::IO, variable::Variable) = print(io, name(variable))
-show(io::IO, ::MIME"text/plain", variable::VariableByName{T}) where T = print(io, "$(name(variable)) ∈ $T")
-show(io::IO, ::MIME"text/plain", variable::UniqueVariable{T}) where T = print(io, "$(name(variable))#$(objectid(variable)) ∈ $T")
+
+uniquename(variable::VariableByName) = name(variable)
+uniquename(variable::UniqueVariable) = "$(name(variable))#$(objectid(variable))"
+
+show(io::IO, ::MIME"text/plain", variable::Variable) = print(io, "$(uniquename(variable)) ∈ $(valtype(variable))")
+show(io::IO, ::MIME"text/plain", variables::NTuple{N, Variable{T}}) where {N, T} = print(io, "$(join(uniquename.(variables), ", ")) ∈ $T")
 
 const Dependencies = Set{Variable}
 dependencies(variable::Variable) = Dependencies((variable,))
