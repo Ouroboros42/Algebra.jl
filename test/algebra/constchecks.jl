@@ -1,6 +1,3 @@
-@var x R
-@var y C
-
 @testset "iszero tests" begin
     @test iszero(Literal(0))
     @test iszero(Literal(0.0))

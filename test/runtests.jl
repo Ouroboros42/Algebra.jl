@@ -16,8 +16,8 @@ end
     end
 
     @testset "algebra tests" begin
-        @var x, y R
-        @var z C
+        @var x R
+        @var y, z C
         @var A, B Matrix{Real}
         @var c, d Bool
 
