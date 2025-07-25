@@ -1,21 +1,11 @@
-function simplify_equal(a, b)
-    A = simplify(a)
-    B = simplify(b)
+function simplify_test(condition, exprs::Expression...)
+    simplified = simplify.(exprs)
 
-    isequal(A, B) || "$A == $B"
+    condition(simplified...) || "Failed $condition: $(join(simplified, ", "))"
 end
 
-function simplify_unequal(a, b)
-    A = simplify(a)
-    B = simplify(b)
-
-    !isequal(A, B) || "$A != $B"
-end
-
-@var x R
-@var z C
-@var A Matrix{Real}
-@var B Matrix{Real}
+simplify_equal(expr1, expr2) = simplify_test(isequal, expr1, expr2)
+simplify_unequal(expr1, expr2) = simplify_test(!isequal, expr1, expr2)
 
 @testset "associative" begin
     @test simplify_equal((x + 1) + z, x + (1 + z))
@@ -51,4 +41,9 @@ end
 @testset "equality" begin
     @test simplify_equal((x == y) & (y == 1), (x == y) & (x == 1))
     @test simplify_equal((x == 1) & (x == 2), Literal(false))
+end
+
+@testset "ifelse" begin
+    @test simplify_equal(ifelse(c, x + 1, x - 1) + 10, ifelse(c, x + 11, x + 9))
+    @test simplify_equal(ifelse(c, x, y) * ifelse(d, x^2, y^2) - 1, ifelse(c, ifelse(d, x^3 - 1, x * y^2 - 1), ifelse(d, x^2 * y - 1, y^3 - 1)))
 end

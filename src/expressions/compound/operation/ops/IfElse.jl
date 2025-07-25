@@ -5,3 +5,5 @@ truebranch(conditional::IfElse) = args(conditional)[2]
 falsebranch(conditional::IfElse) = args(conditional)[3]
 
 tryinfervaltype(::Type{<:IfElse}, ::Type{Bool}, truetype::Type, falsetype::Type) = Union{truetype, falsetype}
+
+mapbranches(f, conditional::IfElse) = ifelse(condition(conditional), f(truebranch(conditional)), f(falsebranch(conditional)))

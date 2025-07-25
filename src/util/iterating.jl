@@ -86,6 +86,7 @@ function ipartition(condition, sequence)
     zip(itrue, sequence[itrue]), zip(ifalse, sequence[ifalse])
 end
 
+replacesome(tup::Tuple, replacements::Pair{Int, Any}...) = Tuple(replacesome(collect(tup), replacements...))
 function replacesome(vec::Vector{T}, replacements::Pair{Int, <:Union{Nothing, T}}...) where T
     replacements = sort!(collect(replacements), by=first)
     

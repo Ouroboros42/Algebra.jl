@@ -16,6 +16,11 @@ end
     end
 
     @testset "algebra tests" begin
+        @var x, y R
+        @var z C
+        @var A, B Matrix{Real}
+        @var c, d Bool
+
         test_directory("algebra")
     end
 end

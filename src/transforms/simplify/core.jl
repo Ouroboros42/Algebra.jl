@@ -1,5 +1,10 @@
 tryapply(simplifier::Simplifier, operation::Operation) = trycombine(simplifier, logicaltype(operation), args(operation)...)
 
+function tryapply(simplifier::Trivial, operation::Operation)
+    @tryreturn @invoke tryapply(simplifier::Simplifier, operation)
+    @tryreturn @invoke tryapply(simplifier, operation::Compound)
+end
+
 """
 Override for types which can be combined together under the given operation.
 Returns `nothing` if no transform for the combination is possible.

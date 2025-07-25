@@ -46,4 +46,6 @@ function tryapply(simplifier::Trivial, operation::Associative)
     @tryreturn trysort(operation, CentralFirst(operation))
 
     @tryreturn @invoke tryapply(simplifier::Simplifier, operation)
+
+    @tryreturn @invoke tryapply(simplifier, operation::Compound)
 end

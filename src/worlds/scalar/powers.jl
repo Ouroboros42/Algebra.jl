@@ -1,4 +1,4 @@
-tryinfervaltype(::Type{<:Pow}, base::Type{<:Complex}, ::Type{<:LogicalInt}) = base
+tryinfervaltype(::Type{<:Pow}, base::Type{<:LogicalComplex}, ::Type{<:LogicalInt}) = base
 tryinfervaltype(::Type{<:Pow}, base::Type{<:Real}, ::Type{<:LogicalInt}) = base
 tryinfervaltype(::Type{<:Pow}, base::Type{<:LogicalInt}, ::Type{<:Signed}) = Union{base, Rational{base}}
 tryinfervaltype(::Type{<:Pow}, base::Type{<:Real}, exponent::Type{<:Real}) = promote_type(base, exponent)

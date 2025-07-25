@@ -14,6 +14,8 @@ function tryapply(simplifier::Trivial, relation::Transitive)
     if issymmetric(relation); @tryreturn trysort(relation) end
 
     @tryreturn @invoke tryapply(simplifier::Simplifier, relation)
+
+    @tryreturn @invoke tryapply(simplifier, relation::Compound)
 end
 
 function trycombine(::Trivial, relation::Type{<:Transitive}, expr1::Expression, expr2::Expression)
