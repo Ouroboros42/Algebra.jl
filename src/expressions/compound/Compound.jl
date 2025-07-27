@@ -35,7 +35,8 @@ trysort(compound::Compound, order::Ordering = Forward) = if !issorted(compound.a
     similar(compound, sort(compound.arguments; order))
 end
 
-replacesomeargs(compound::Compound, replacements...) = similar(compound, replacesome(args(compound), replacements...))
+replacesome(compound::Compound, replacements...) = similar(compound, replacesome(args(compound), replacements...))
+replaceat(compound::Compound, replacement...) = similar(compound, replaceat(args(compound), replacement...)) 
 
 dependencies(compound::Compound) = mapreduce(dependencies, union, args(compound), init=Dependencies())
 

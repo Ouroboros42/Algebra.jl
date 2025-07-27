@@ -3,7 +3,7 @@ function tryapply(simplifier::Simplifier, compound::Compound)
 
     mapsome(firstornothing(isinst(IfElse) ∘ last, iargs(compound))) do (i, conditional)
         mapbranches(conditional) do branch
-            replacesomeargs(compound, i => branch)
+            replaceat(compound, i, branch)
         end 
     end
 end

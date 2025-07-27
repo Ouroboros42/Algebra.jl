@@ -5,7 +5,7 @@ function tryapply(simplifier::Simplifier, relation::Transitive)
 
     for ((i1, expr1), (i2, expr2)) in adjacent(relation)
         @tryreturn mapsome(matchtrycombine(simplifier, relation, expr1, expr2)) do combined
-            replacesomeargs(relation, i1 => nothing) & combined
+            replacesome(relation, i1 => nothing) & combined
         end
     end
 

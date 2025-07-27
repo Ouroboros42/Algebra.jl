@@ -42,7 +42,7 @@ function tryapply(simplifier::Simplifier, operation::Associative)
 
     for ((i1, expr1), (i2, expr2)) in adjacent(operation)
         @tryreturn mapsome(matchtrycombine(simplifier, operation, expr1, expr2)) do combined
-            replacesomeargs(operation, i1 => nothing, i2 => combined)
+            replacesome(operation, i1 => nothing, i2 => combined)
         end
     end
 end
