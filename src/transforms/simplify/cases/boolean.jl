@@ -20,3 +20,9 @@ end
 function trycombine(::Simplifier, ::Type{<:IfElse}, condition::Expression{Bool}, truebranch::Expression{Bool}, falsebranch::Expression{Bool})
     (condition & truebranch) | (!condition & falsebranch)
 end
+
+function trycombine(::Simplifier, ::Type{<:IfElse}, condition::Expression{Bool}, truebranch::Expression, falsebranch::Expression)
+    if isequal(truebranch, falsebranch)
+        truebranch
+    end
+end
