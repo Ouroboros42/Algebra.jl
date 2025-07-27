@@ -19,14 +19,6 @@ function adjacent(operation::Associative)
 end
 
 function tryapply(simplifier::Simplifier, operation::Associative)
-    for ((i1, expr1), (i2, expr2)) in adjacent(operation)
-        @tryreturn mapsome(matchtrycombine(simplifier, operation, expr1, expr2)) do combined
-            replacesomeargs(operation, i1 => nothing, i2 => combined)
-        end
-    end
-end
-
-function tryapply(simplifier::Trivial, operation::Associative)
     if isempty(operation.arguments)
         throw(EmptyOperationError{logicaltype(operation)}())
     end
@@ -37,6 +29,9 @@ function tryapply(simplifier::Trivial, operation::Associative)
         return flatten(operation)
     end
 
+    @tryreturn @invoke tryapply(simplifier, operation::Compound)
+
+    # Move to trycombine
     @tryreturn firstornothing(isabsorbing(operation), operation.arguments)
     
     if any(isidentity(operation), operation.arguments)
@@ -45,7 +40,9 @@ function tryapply(simplifier::Trivial, operation::Associative)
     
     @tryreturn trysort(operation, CentralFirst(operation))
 
-    @tryreturn @invoke tryapply(simplifier::Simplifier, operation)
-
-    @tryreturn @invoke tryapply(simplifier, operation::Compound)
+    for ((i1, expr1), (i2, expr2)) in adjacent(operation)
+        @tryreturn mapsome(matchtrycombine(simplifier, operation, expr1, expr2)) do combined
+            replacesomeargs(operation, i1 => nothing, i2 => combined)
+        end
+    end
 end

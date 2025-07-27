@@ -1,7 +1,7 @@
-tryevaluate(::Trivial, ::Type{<:Equality}, a, b) = a == b
-tryevaluate(::Trivial, ::Type{<:Not}, a::Bool) = !a
+tryevaluate(::Simplifier, ::Type{<:Equality}, a, b) = a == b
+tryevaluate(::Simplifier, ::Type{<:Not}, a::Bool) = !a
 
-trycombine(::Trivial, ::Type{<:Not}, not::Not) = arg(not)
+trycombine(::Simplifier, ::Type{<:Not}, not::Not) = arg(not)
 
 areconverse(simplifier::Simplifier, a::Expression{Bool}, b::Expression{Bool}) = isequal(apply(simplifier, !a), b)
 
@@ -17,16 +17,6 @@ function trycombine(simplifier::Simplifier, ::Type{<:Or}, a::Expression{Bool}, b
     if areconverse(simplifier, a, b); return TRUE end
 end
 
-function tryapply(::Trivial, compound::Compound)
-    if compound isa IfElse; return end
-
-    mapsome(firstornothing(isinst(IfElse) ∘ last, iargs(compound))) do (i, conditional)
-        mapbranches(conditional) do branch
-            replacesomeargs(compound, i => branch)
-        end 
-    end
-end
-
-function tryapply(::Trivial, conditional::IfElse{Bool})
-    (condition(conditional) & truebranch(conditional)) | (!condition(conditional) & falsebranch(conditional))
+function trycombine(::Simplifier, ::Type{<:IfElse}, condition::Expression{Bool}, truebranch::Expression{Bool}, falsebranch::Expression{Bool})
+    (condition & truebranch) | (!condition & falsebranch)
 end

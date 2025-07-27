@@ -1,4 +1,4 @@
-function trycombine(::Trivial, ::Type{<:Pow}, base::Expression, exponent::Expression)
+function trycombine(::Simplifier, ::Type{<:Pow}, base::Expression, exponent::Expression)
     if iszero(exponent); return one(base) end
 
     if isone(exponent); return base end
@@ -8,9 +8,9 @@ function trycombine(::Trivial, ::Type{<:Pow}, base::Expression, exponent::Expres
     # TODO handle zero base
 end
 
-trycombine(simplifier::Trivial, outer::Type{<:Pow}, base::Literal, exponent::Literal) = @invoke trycombine(simplifier, outer::Type{<:Compound}, base, exponent)
+trycombine(simplifier::Simplifier, outer::Type{<:Pow}, base::Literal, exponent::Literal) = @invoke trycombine(simplifier, outer::Type{<:Compound}, base, exponent)
 
-function trycombine(simplifier::Trivial, outer::Type{<:Pow}, base::Pow, outerexp::Expression)
+function trycombine(simplifier::Simplifier, outer::Type{<:Pow}, base::Pow, outerexp::Expression)
     @tryreturn @invoke trycombine(simplifier, outer, base::Expression, outerexp)
 
     innerbase, innerexp = base
@@ -20,7 +20,10 @@ function trycombine(simplifier::Trivial, outer::Type{<:Pow}, base::Pow, outerexp
     end
 end
 
-function trycombine(simplifier::Simplifier, ::Type{<:Prod}, (base1, exponent1)::Pow, (base2, exponent2)::Pow)
+function trycombine(simplifier::Simplifier, outer::Type{<:Prod}, pow1::Pow, pow2::Pow)
+    (base1, exponent1) = pow1
+    (base2, exponent2) = pow2
+
     if isequal(base1, base2)
         @tryreturn mapsome(matchtrycombine(simplifier, Sum, exponent1, exponent2)) do newexponent
             base1 ^ newexponent
@@ -34,11 +37,8 @@ function trycombine(simplifier::Simplifier, ::Type{<:Prod}, (base1, exponent1)::
             end
         end
     end
-end
 
-function trycombine(simplifier::Trivial, outer::Type{<:Prod}, pow1::Pow, pow2::Pow)
     @tryreturn @invoke trycombine(simplifier, outer, pow1::Expression, pow2::Expression)
-    @tryreturn @invoke trycombine(simplifier::Simplifier, outer, pow1, pow2)
 end
 
 matchingforms(::Simplifier, outer::Type{<:Prod}, power::Pow, single::Expression) = (single ^ ONE,)

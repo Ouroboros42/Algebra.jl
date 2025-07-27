@@ -1,8 +1,16 @@
-tryapply(simplifier::Simplifier, operation::Operation) = trycombine(simplifier, logicaltype(operation), args(operation)...)
+function tryapply(simplifier::Simplifier, compound::Compound)
+    if compound isa IfElse; return end
 
-function tryapply(simplifier::Trivial, operation::Operation)
-    @tryreturn @invoke tryapply(simplifier::Simplifier, operation)
-    @tryreturn @invoke tryapply(simplifier, operation::Compound)
+    mapsome(firstornothing(isinst(IfElse) ∘ last, iargs(compound))) do (i, conditional)
+        mapbranches(conditional) do branch
+            replacesomeargs(compound, i => branch)
+        end 
+    end
+end
+
+function tryapply(simplifier::Simplifier, operation::Operation)
+    @tryreturn @invoke trycombine(simplifier, operation::Compound)
+    trycombine(simplifier, logicaltype(operation), args(operation)...)
 end
 
 """
