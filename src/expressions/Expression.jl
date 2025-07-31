@@ -3,6 +3,8 @@ Base type for all algebraic expressions.
 """
 abstract type Expression{T} end
 
+const Statement = Expression{Bool}
+
 valtype(::Type{E}) where {T, E <: Expression{T}} = T
 valtype(::Type{E}) where {E <: Expression} = nothing
 valtype(::Expression{T}) where T = T
