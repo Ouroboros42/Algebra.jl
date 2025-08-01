@@ -9,7 +9,8 @@ function tryapply(simplifier::Simplifier, compound::Compound)
 end
 
 function tryapply(simplifier::Simplifier, operation::Operation)
-    @tryreturn @invoke trycombine(simplifier, operation::Compound)
+    @tryreturn @invoke tryapply(simplifier, operation::Compound)
+
     trycombine(simplifier, logicaltype(operation), args(operation)...)
 end
 
