@@ -1,10 +1,12 @@
 function tryapply(simplifier::Simplifier, compound::Compound)
-    if compound isa IfElse; return end
+    @tryreturn @invoke tryapply(simplifier::Transform, compound)
 
-    mapsome(firstornothing(isinst(IfElse) ∘ last, iargs(compound))) do (i, conditional)
-        mapbranches(conditional) do branch
-            replaceat(compound, i, branch)
-        end 
+    if !(compound isa IfElse)
+        mapsome(firstornothing(isinst(IfElse) ∘ last, iargs(compound))) do (i, conditional)
+            mapbranches(conditional) do branch
+                replaceat(compound, i, branch)
+            end 
+        end
     end
 end
 

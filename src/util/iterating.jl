@@ -93,6 +93,14 @@ function replaceat(vec::Vector, i, newval)
     newvec
 end
 
+function mapfirst(f, seq)
+    for (i, item) in pairs(seq)
+        @tryreturn mapsome(f(item)) do result
+            replaceat(seq, i, result)
+        end
+    end
+end
+
 function replacesome(vec::Vector{T}, replacements::Pair{Int, <:Union{Nothing, T}}...) where T
     replacements = sort!(collect(replacements), by=first)
     

@@ -13,7 +13,8 @@ abstract type Compound{T} <: Expression{T} end
 Subtypes should implement `logicaltype` to provide a standard copy constructor, as well as an identifier for common methods.
 """
 logicaltype(compound::Compound) = logicaltype(typeof(compound))
-similar(compound::Compound, args...) = logicaltype(compound)(args...)  
+similar(compound::Compound, args...) = logicaltype(compound)(args...)
+similar(compound::Compound) = (args...) -> similar(compound, args...)
 map(f, compound::Compound) = similar(compound, map(f, args(compound)))
 
 isequal(first::Compound, second::Compound) = logicaltype(first) === logicaltype(second) && isequal(args(first), args(second))
@@ -37,6 +38,7 @@ end
 
 replacesome(compound::Compound, replacements...) = similar(compound, replacesome(args(compound), replacements...))
 replaceat(compound::Compound, replacement...) = similar(compound, replaceat(args(compound), replacement...)) 
+mapfirst(f, compound::Compound) = mapsome(similar(compound), mapfirst(f, args(compound)))
 
 dependencies(compound::Compound) = mapreduce(dependencies, union, args(compound), init=Dependencies())
 

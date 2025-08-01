@@ -1,16 +1,17 @@
 abstract type Simplifier <: Transform end
 
-function apply(simplifier::Simplifier, expression::Expression)
-    maybe_simpler = tryapply(simplifier, expression)
+function apply(simplifier::Simplifier, expression::Expression, max_iterations = 1_000_000)
+    for _ in 1:max_iterations
+        maybe_simpler = tryapply(simplifier, expression)
 
-    if !isnothing(maybe_simpler)
+        if isnothing(maybe_simpler); return expression end
+        
         @debug "Using $simplifier: $(expression) to $(maybe_simpler)"
 
-        return apply(simplifier, maybe_simpler)
+        expression = maybe_simpler
     end
+
+    @error "Simplifier reached max iterations ($max_iterations), got to $expression"
 
     expression
 end
-
-# Apply to subexpressions first, then try to apply simplifications the whole expression
-apply(simplifier::Simplifier, compound::Compound) = @invoke apply(simplifier, (@invoke apply(simplifier::Transform, compound))::Expression)
