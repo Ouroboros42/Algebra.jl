@@ -38,7 +38,7 @@ end
 
 replacesome(compound::Compound, replacements...) = similar(compound, replacesome(args(compound), replacements...))
 replaceat(compound::Compound, replacement...) = similar(compound, replaceat(args(compound), replacement...)) 
-mapfirst(f, compound::Compound) = mapsome(similar(compound), mapfirst(f, args(compound)))
+mapfirst(f, compound::Compound, additional...) = mapsome(similar(compound), mapfirst(f, args(compound), additional...))
 
 dependencies(compound::Compound) = mapreduce(dependencies, union, args(compound), init=Dependencies())
 

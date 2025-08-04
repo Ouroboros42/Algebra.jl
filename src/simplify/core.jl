@@ -4,16 +4,10 @@ tryapply(transform) = expression -> tryapply(transform, expression)
 tryapply(transform, expression::Expression) = nothing
 
 function tryapply(simplifier::Simplifier, compound::Compound)
-    @tryreturn mapfirst(tryapply(simplifier), compound)
-
-    if !(compound isa IfElse)
-        mapsome(firstornothing(isinst(IfElse) ∘ last, iargs(compound))) do (i, conditional)
-            mapbranches(conditional) do branch
-                replaceat(compound, i, branch)
-            end 
-        end
-    end
+    @tryreturn propagate(simplifier, compound)
+    @tryreturn liftconditionals(compound)
 end
+propagate(simplifier::Simplifier, compound::Compound) = mapfirst(tryapply(simplifier), compound)
 
 function tryapply(simplifier::Simplifier, operation::Operation)
     @tryreturn @invoke tryapply(simplifier, operation::Compound)

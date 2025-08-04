@@ -1,3 +1,12 @@
+function liftconditionals(compound::Compound)
+    mapsome(firstornothing(isinst(IfElse) ∘ last, iargs(compound))) do (i, conditional)
+        mapbranches(conditional) do branch
+            replaceat(compound, i, branch)
+        end 
+    end
+end
+liftconditionals(::IfElse) = nothing
+
 tryevaluate(::Simplifier, ::Type{<:Equality}, a, b) = a == b
 tryevaluate(::Simplifier, ::Type{<:Not}, a::Bool) = !a
 

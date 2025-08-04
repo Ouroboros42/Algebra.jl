@@ -35,7 +35,7 @@ function tryapply(simplifier::Simplifier, operation::Associative)
     @tryreturn firstornothing(isabsorbing(operation), operation.arguments)
     
     if any(isidentity(operation), operation.arguments)
-        return similar(operation, filter(!isidentity(operation), operation.arguments)) 
+        return similar(operation, filter(!isidentity(operation), operation.arguments), first(args(operation))) 
     end
     
     @tryreturn trysort(operation, CentralFirst(operation))

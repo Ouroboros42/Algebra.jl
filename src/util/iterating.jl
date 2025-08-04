@@ -93,9 +93,9 @@ function replaceat(vec::Vector, i, newval)
     newvec
 end
 
-function mapfirst(f, seq)
-    for (i, item) in pairs(seq)
-        @tryreturn mapsome(f(item)) do result
+function mapfirst(f, seq, additional...)
+    for ((i, item), extras...) in zip(pairs(seq), additional...)
+        @tryreturn mapsome(f(item, extras...)) do result
             replaceat(seq, i, result)
         end
     end
@@ -129,3 +129,6 @@ function replacesome(vec::Vector{T}, replacements::Pair{Int, <:Union{Nothing, T}
 
     newvec
 end
+
+exceptfor(seq, i) = [seq[begin:i-1]..., seq[i+1:end]...]
+others(seq) = Iterators.map(i -> exceptfor(seq, i), keys(seq))
