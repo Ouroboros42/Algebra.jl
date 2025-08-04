@@ -13,6 +13,6 @@ function tryevaluate(::Simplifier, ::Type{<:Pow}, base::ComplexExact, exponent::
     realconvert(Rational, base) ^ exponent
 end
 
-function tryevaluate(::FloatApprox{F}, ::Type{<:Pow}, base::LogicalComplex, exponent::LogicalComplex) where F
-    realconvert(F, base) ^ realconvert(F, exponent)
+function tryevaluate(approximator::Approximator, ::Type{<:Pow}, base::LogicalComplex, exponent::LogicalComplex)
+    realconvert(approximator, base) ^ realconvert(approximator, exponent)
 end

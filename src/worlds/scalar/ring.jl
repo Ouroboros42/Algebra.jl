@@ -19,6 +19,6 @@ function tryevaluate(::Simplifier, outer::Type{<:RingOps}, n1::ComplexExact, n2:
     op(outer)(convert(newtype, n1), convert(newtype, n2))
 end
 
-function tryevaluate(::FloatApprox{F}, outer::Type{<:RingOps}, n1::LogicalComplex, n2::LogicalComplex) where F
-    op(outer)(realconvert(F, n1), realconvert(F, n2))
+function tryevaluate(approximator::Approximator, outer::Type{<:RingOps}, n1::LogicalComplex, n2::LogicalComplex)
+    op(outer)(realconvert(approximator, n1), realconvert(approximator, n2))
 end
