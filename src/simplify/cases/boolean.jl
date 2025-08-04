@@ -22,7 +22,11 @@ function trycombine(::Simplifier, ::Type{<:IfElse}, condition::Statement, truebr
 end
 
 function trycombine(::Simplifier, ::Type{<:IfElse}, condition::Statement, truebranch::Expression, falsebranch::Expression)
+    if condition isa Literal
+        return ifelse(condition.value, truebranch, falsebranch)
+    end
+
     if isequal(truebranch, falsebranch)
-        truebranch
+        return truebranch
     end
 end
