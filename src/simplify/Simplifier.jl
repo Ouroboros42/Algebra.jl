@@ -1,4 +1,4 @@
-abstract type Simplifier <: Transform end
+abstract type Simplifier end
 
 function apply(simplifier::Simplifier, expression::Expression, max_iterations = 1_000_000)
     for _ in 1:max_iterations

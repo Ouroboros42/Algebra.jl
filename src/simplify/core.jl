@@ -1,5 +1,10 @@
+apply(transform) = expression -> apply(transform, expression)
+tryapply(transform) = expression -> tryapply(transform, expression)
+
+tryapply(transform, expression::Expression) = nothing
+
 function tryapply(simplifier::Simplifier, compound::Compound)
-    @tryreturn @invoke tryapply(simplifier::Transform, compound)
+    @tryreturn mapfirst(tryapply(simplifier), compound)
 
     if !(compound isa IfElse)
         mapsome(firstornothing(isinst(IfElse) ∘ last, iargs(compound))) do (i, conditional)
