@@ -11,7 +11,7 @@ function tryevaluate(::Simplifier, ::Type{<:Pow}, base::ComplexExact, exponent::
     end
 end
 
-function tryevaluate(simplfier::SimplifierSpec, ::Type{<:Pow}, base::LogicalComplex, exponent::LogicalComplex)
+function tryevaluate(simplfier::Simplifier, ::Type{<:Pow}, base::LogicalComplex, exponent::LogicalComplex)
     mapsome(floattype(simplfier)) do approxreal
         realconvert(approxreal, base) ^ realconvert(approxreal, exponent)
     end
