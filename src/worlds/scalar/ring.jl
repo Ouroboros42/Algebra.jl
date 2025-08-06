@@ -12,13 +12,14 @@ ring_promote(R1::Type{<:LogicalRational}, R2::Type{<:LogicalRational}) = Rationa
 ring_promote(R1::Type{<:Real}, R2::Type{<:Real}) = promote_type(R1, R2)
 ring_promote(C1::Type{<:LogicalComplex}, C2::Type{<:LogicalComplex}) = Complex{ring_promote(realtype(C1), realtype(C2))}
 
-function tryevaluate(::Simplifier, outer::Type{<:RingOps}, n1::ComplexExact, n2::ComplexExact)
+function tryevaluate(simplifier::SimplifierSpec, outer::Type{<:RingOps}, n1::LogicalComplex, n2::LogicalComplex)
     newtype = ring_promote(typeof(n1), typeof(n2))
-    if !(newtype <: ComplexExact); return end
 
-    op(outer)(convert(newtype, n1), convert(newtype, n2))
-end
+    if newtype <: ComplexExact
+        return op(outer)(convert(newtype, n1), convert(newtype, n2))
+    end
 
-function tryevaluate(approximator::Approximator, outer::Type{<:RingOps}, n1::LogicalComplex, n2::LogicalComplex)
-    op(outer)(realconvert(approximator, n1), realconvert(approximator, n2))
+    mapsome(floattype(simplifier)) do approxreal
+        return op(outer)(realconvert(approxreal, n1), realconvert(approxreal, n2))
+    end
 end

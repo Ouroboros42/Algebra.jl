@@ -4,15 +4,15 @@ tryinfervaltype(::Type{<:Pow}, base::Type{<:LogicalInt}, ::Type{<:Signed}) = Uni
 tryinfervaltype(::Type{<:Pow}, base::Type{<:Real}, exponent::Type{<:Real}) = promote_type(base, exponent)
 
 function tryevaluate(::Simplifier, ::Type{<:Pow}, base::ComplexExact, exponent::ComplexExact)
-    intexponent = @returnnothing maybeinteger(exponent)
-    
-    if iszero(intexponent); return one(base) end
+    mapsome(maybeinteger(exponent)) do intexponent
+        if exponent >= 0; return base ^ intexponent end
 
-    if exponent > 0; return base ^ exponent end
-
-    realconvert(Rational, base) ^ exponent
+        realconvert(Rational, base) ^ intexponent
+    end
 end
 
-function tryevaluate(approximator::Approximator, ::Type{<:Pow}, base::LogicalComplex, exponent::LogicalComplex)
-    realconvert(approximator, base) ^ realconvert(approximator, exponent)
+function tryevaluate(simplfier::SimplifierSpec, ::Type{<:Pow}, base::LogicalComplex, exponent::LogicalComplex)
+    mapsome(floattype(simplfier)) do approxreal
+        realconvert(approxreal, base) ^ realconvert(approxreal, exponent)
+    end
 end

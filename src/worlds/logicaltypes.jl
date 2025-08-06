@@ -13,7 +13,6 @@ realtype(::Type{Union{A, B}}) where {A, B} = Union{realtype(A), realtype(B)}
 
 realconvert(R::Type{<:Real}, value::Real) = convert(R, value)
 realconvert(R::Type{<:Real}, value::Complex) = convert(Complex{R}, value)
-realconvert(approximator::Approximator, value) = realconvert(floattype(approximator), value)
 
 const CVector = AbstractVector{<:LogicalComplex}
 const CMatrix = AbstractMatrix{<:LogicalComplex}

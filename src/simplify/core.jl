@@ -7,7 +7,18 @@ function tryapply(simplifier::Simplifier, compound::Compound)
     @tryreturn propagate(simplifier, compound)
     @tryreturn liftconditionals(compound)
 end
-propagate(simplifier::Simplifier, compound::Compound) = mapfirst(tryapply(simplifier), compound)
+
+function propagate(simplifier::Simplifier, compound::Compound)
+    if iscontextual(simplifier)
+        @tryreturn mapsome(argcontexts(compound)) do contexts
+            mapfirst(compound, contexts) do subexpr, context
+                tryapply(updatecontext(simplifier, context), subexpr)
+            end
+        end
+    end
+    
+    mapfirst(tryapply(simplifier), compound)
+end
 
 function tryapply(simplifier::Simplifier, operation::Operation)
     @tryreturn @invoke tryapply(simplifier, operation::Compound)

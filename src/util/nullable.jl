@@ -33,6 +33,10 @@ end
 mapsome(f, ::Nothing) = nothing
 mapsome(f, arg) = f(arg)
 
+mapsome(f, args...) = if !any(isnothing, args)
+    f(args...)
+end
+
 forsome(f, ::Nothing) = nothing
 function forsome(f, arg)
     f(arg)
