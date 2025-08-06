@@ -2,9 +2,9 @@ matchingforms(simplifier, ::Type{<:Sum}, target::Prod, initial::Expression) = (s
 
 isnested(assoc::Associative) = isinst(logicaltype(assoc))
 
-toargs(::Associative, expr::Expression) = [ expr ]
-toargs(::Associative{Op}, expr::Associative{Op}) where Op = expr.arguments
-toargs(operation) = expr -> toargs(operation, expr) 
+toargs(assoc::Type{<:Associative}, expr::Expression) = expr isa assoc ? args(expr) : [ expr ]
+toargs(assoc) = expr -> toargs(assoc, expr)
+toargs(operation::Associative) = toargs(logicaltype(operation))
 
 flatten(operation::Associative) = similar(operation, collect(Iterators.flatmap(toargs(operation), args(operation))))
 
