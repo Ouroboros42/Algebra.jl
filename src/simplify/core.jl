@@ -1,9 +1,7 @@
-apply(transform) = expression -> apply(transform, expression)
-tryapply(transform) = expression -> tryapply(transform, expression)
+trysimplify(simplifier) = expression -> trysimplify(simplifier, expression)
+trysimplify(simplifier, expression::Expression) = nothing
 
-tryapply(transform, expression::Expression) = nothing
-
-function tryapply(simplifier::Simplifier, compound::Compound)
+function trysimplify(simplifier::Simplifier, compound::Compound)
     @tryreturn propagate(simplifier, compound)
     @tryreturn liftconditionals(compound)
 end
@@ -12,16 +10,16 @@ function propagate(simplifier::Simplifier, compound::Compound)
     if iscontextual(simplifier)
         @tryreturn mapsome(argcontexts(compound)) do contexts
             mapfirst(compound, contexts) do subexpr, context
-                tryapply(updatecontext(simplifier, context), subexpr)
+                trysimplify(updatecontext(simplifier, context), subexpr)
             end
         end
     end
     
-    mapfirst(tryapply(simplifier), compound)
+    mapfirst(trysimplify(simplifier), compound)
 end
 
-function tryapply(simplifier::Simplifier, operation::Operation)
-    @tryreturn @invoke tryapply(simplifier, operation::Compound)
+function trysimplify(simplifier::Simplifier, operation::Operation)
+    @tryreturn @invoke trysimplify(simplifier, operation::Compound)
 
     trycombine(simplifier, logicaltype(operation), args(operation)...)
 end

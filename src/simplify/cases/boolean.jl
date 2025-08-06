@@ -12,7 +12,7 @@ tryevaluate(::Simplifier, ::Type{<:Not}, a::Bool) = !a
 
 trycombine(::Simplifier, ::Type{<:Not}, not::Not) = arg(not)
 
-areconverse(simplifier::Simplifier, a::Statement, b::Statement) = isequal(apply(simplifier, !a), b)
+areconverse(simplifier::Simplifier, a::Statement, b::Statement) = isequal(simplify(simplifier, !a), b)
 
 function trycombine(simplifier::Simplifier, ::Type{<:And}, a::Statement, b::Statement)
     if isequal(a, b); return a end

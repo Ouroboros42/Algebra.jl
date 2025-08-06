@@ -1,7 +1,7 @@
 adjacent(relation::Transitive) = issymmetric(relation) ? preindexed_combinations(iargs(relation), 2) : adjacent(iargs(relation))
 
-function tryapply(simplifier::Simplifier, relation::Transitive)
-    @tryreturn @invoke tryapply(simplifier, relation::Compound)
+function trysimplify(simplifier::Simplifier, relation::Transitive)
+    @tryreturn @invoke trysimplify(simplifier, relation::Compound)
 
     for ((i1, expr1), (i2, expr2)) in adjacent(relation)
         @tryreturn mapsome(matchtrycombine(simplifier, relation, expr1, expr2)) do combined

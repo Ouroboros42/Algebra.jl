@@ -18,7 +18,7 @@ function adjacent(operation::Associative)
     ))
 end
 
-function tryapply(simplifier::Simplifier, operation::Associative)
+function trysimplify(simplifier::Simplifier, operation::Associative)
     if isempty(operation.arguments)
         throw(EmptyOperationError{logicaltype(operation)}())
     end
@@ -29,7 +29,7 @@ function tryapply(simplifier::Simplifier, operation::Associative)
         return flatten(operation)
     end
 
-    @tryreturn @invoke tryapply(simplifier, operation::Compound)
+    @tryreturn @invoke trysimplify(simplifier, operation::Compound)
 
     # Move to trycombine
     @tryreturn firstornothing(isabsorbing(operation), operation.arguments)

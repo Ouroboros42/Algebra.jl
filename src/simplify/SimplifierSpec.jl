@@ -11,13 +11,13 @@ floattype(simplifier::SimplifierSpec) = simplifier.floattype
 
 iscontextual(simplifier) = !isnothing(context(simplifier))
 
-simplify(expression::Expression; kwargs...) = apply(SimplifierSpec(; kwargs...), expression)
+simplify(expression::Expression; kwargs...) = simplify(SimplifierSpec(; kwargs...), expression)
 approximate(expression::Expression; floattype = Float64, kwargs...) = simplify(expression; floattype, kwargs...)
 
 nocontext(spec::SimplifierSpec) = SimplifierSpec(spec; context = nothing)
 
 function updatecontext(spec::SimplifierSpec, context::Statement)
-    SimplifierSpec(spec; context = isnothing(spec.context) ? context : apply(nocontext(spec), spec.context & context))
+    SimplifierSpec(spec; context = isnothing(spec.context) ? context : simplify(nocontext(spec), spec.context & context))
 end
 
 updatecontext(spec::SimplifierSpec, context::Nothing) = spec
