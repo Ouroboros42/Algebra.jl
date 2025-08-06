@@ -9,6 +9,8 @@ Simplifier(simplifier::Simplifier; updates...) = Simplifier(; simplifier.context
 context(simplifier::Simplifier) = simplifier.context
 floattype(simplifier::Simplifier) = simplifier.floattype
 
+contexts(simplifier::Simplifier) = @ordefault(mapsome(toargs(And), context(simplifier)), Expression[])
+
 iscontextual(simplifier) = !isnothing(context(simplifier))
 
 simplify(expression::Expression; kwargs...) = simplify(Simplifier(; kwargs...), expression)
@@ -21,9 +23,3 @@ function updatecontext(simplifier::Simplifier, context::Statement)
     Simplifier(simplifier; context = newcontext)
 end
 updatecontext(simplifier::Simplifier, context::Nothing) = simplifier
-
-function anycontext(condition, simplifier::Simplifier)
-    mapsome(context(simplifier)) do context
-       any(condition, toargs(And, context))
-    end
-end

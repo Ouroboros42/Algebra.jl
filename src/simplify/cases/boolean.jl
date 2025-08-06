@@ -35,7 +35,11 @@ function trycombine(simplifier, ::Type{<:IfElse}, condition::Statement, truebran
         return ifelse(condition.value, truebranch, falsebranch)
     end
 
-    if isequal(truebranch, falsebranch)
+    if isequal(simplify(updatecontext(simplifier, condition), truebranch == falsebranch), TRUE)
+        return falsebranch
+    end
+
+    if isequal(simplify(updatecontext(simplifier, !condition), truebranch == falsebranch), TRUE)
         return truebranch
     end
 end
