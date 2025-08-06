@@ -1,4 +1,4 @@
-matchingforms(::Simplifier, ::Type{<:Sum}, target::Prod, initial::Expression) = (similar(target, initial),)
+matchingforms(simplifier, ::Type{<:Sum}, target::Prod, initial::Expression) = (similar(target, initial),)
 
 isnested(assoc::Associative) = isinst(logicaltype(assoc))
 
@@ -18,7 +18,7 @@ function adjacent(operation::Associative)
     ))
 end
 
-function trysimplify(simplifier::Simplifier, operation::Associative)
+function trysimplify(simplifier, operation::Associative)
     if isempty(operation.arguments)
         throw(EmptyOperationError{logicaltype(operation)}())
     end

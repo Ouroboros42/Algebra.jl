@@ -12,7 +12,7 @@ ring_promote(R1::Type{<:LogicalRational}, R2::Type{<:LogicalRational}) = Rationa
 ring_promote(R1::Type{<:Real}, R2::Type{<:Real}) = promote_type(R1, R2)
 ring_promote(C1::Type{<:LogicalComplex}, C2::Type{<:LogicalComplex}) = Complex{ring_promote(realtype(C1), realtype(C2))}
 
-function tryevaluate(simplifier::Simplifier, outer::Type{<:RingOps}, n1::LogicalComplex, n2::LogicalComplex)
+function tryevaluate(simplifier, outer::Type{<:RingOps}, n1::LogicalComplex, n2::LogicalComplex)
     newtype = ring_promote(typeof(n1), typeof(n2))
 
     if newtype <: ComplexExact

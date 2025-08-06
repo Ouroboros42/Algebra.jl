@@ -1,6 +1,6 @@
 adjacent(relation::Transitive) = issymmetric(relation) ? preindexed_combinations(iargs(relation), 2) : adjacent(iargs(relation))
 
-function trysimplify(simplifier::Simplifier, relation::Transitive)
+function trysimplify(simplifier, relation::Transitive)
     @tryreturn @invoke trysimplify(simplifier, relation::Compound)
 
     for ((i1, expr1), (i2, expr2)) in adjacent(relation)
@@ -14,18 +14,18 @@ function trysimplify(simplifier::Simplifier, relation::Transitive)
     if issymmetric(relation); @tryreturn trysort(relation) end
 end
 
-function trycombine(::Simplifier, relation::Type{<:Transitive}, expr1::Expression, expr2::Expression)
+function trycombine(simplifier, relation::Type{<:Transitive}, expr1::Expression, expr2::Expression)
     if isreflexive(relation) && isequal(expr1, expr2)
         TRUE
     end
 end
 
-function trycombine(simplifier::Simplifier, relation::Type{<:Transitive}, a::Literal, b::Literal)
+function trycombine(simplifier, relation::Type{<:Transitive}, a::Literal, b::Literal)
     @tryreturn @invoke trycombine(simplifier, relation::Type{<:Compound}, a, b)
     @tryreturn @invoke trycombine(simplifier, relation, a::Expression, b::Expression)
 end
 
-function trycombine(simplifier::Simplifier, outer::Type{<:And}, trans1::Transitive{Op}, trans2::Transitive{Op}) where Op
+function trycombine(simplifier, outer::Type{<:And}, trans1::Transitive{Op}, trans2::Transitive{Op}) where Op
     @tryreturn @invoke trycombine(simplifier, outer, trans1::Expression, trans2::Expression)
 
     if issymmetric(trans1) && issymmetric(trans2)

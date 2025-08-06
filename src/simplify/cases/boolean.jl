@@ -7,30 +7,30 @@ function liftconditionals(compound::Compound)
 end
 liftconditionals(::IfElse) = nothing
 
-tryevaluate(::Simplifier, ::Type{<:Equality}, a, b) = a == b
-tryevaluate(::Simplifier, ::Type{<:Not}, a::Bool) = !a
+tryevaluate(simplifier, ::Type{<:Equality}, a, b) = a == b
+tryevaluate(simplifier, ::Type{<:Not}, a::Bool) = !a
 
-trycombine(::Simplifier, ::Type{<:Not}, not::Not) = arg(not)
+trycombine(simplifier, ::Type{<:Not}, not::Not) = arg(not)
 
-areconverse(simplifier::Simplifier, a::Statement, b::Statement) = isequal(simplify(simplifier, !a), b)
+areconverse(simplifier, a::Statement, b::Statement) = isequal(simplify(simplifier, !a), b)
 
-function trycombine(simplifier::Simplifier, ::Type{<:And}, a::Statement, b::Statement)
+function trycombine(simplifier, ::Type{<:And}, a::Statement, b::Statement)
     if isequal(a, b); return a end
 
     if areconverse(simplifier, a, b); return FALSE end
 end
 
-function trycombine(simplifier::Simplifier, ::Type{<:Or}, a::Statement, b::Statement)
+function trycombine(simplifier, ::Type{<:Or}, a::Statement, b::Statement)
     if isequal(a, b); return a end
 
     if areconverse(simplifier, a, b); return TRUE end
 end
 
-function trycombine(::Simplifier, ::Type{<:IfElse}, condition::Statement, truebranch::Statement, falsebranch::Statement)
+function trycombine(simplifier, ::Type{<:IfElse}, condition::Statement, truebranch::Statement, falsebranch::Statement)
     (condition & truebranch) | (!condition & falsebranch)
 end
 
-function trycombine(::Simplifier, ::Type{<:IfElse}, condition::Statement, truebranch::Expression, falsebranch::Expression)
+function trycombine(simplifier, ::Type{<:IfElse}, condition::Statement, truebranch::Expression, falsebranch::Expression)
     if condition isa Literal
         return ifelse(condition.value, truebranch, falsebranch)
     end

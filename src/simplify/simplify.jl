@@ -1,4 +1,4 @@
-function simplify(simplifier::Simplifier, expression::Expression, max_iterations = 1_000_000)
+function simplify(simplifier, expression::Expression, max_iterations = 1_000_000)
     for _ in 1:max_iterations
         maybe_simpler = trysimplify(simplifier, expression)
 
@@ -17,12 +17,12 @@ end
 trysimplify(simplifier) = expression -> trysimplify(simplifier, expression)
 trysimplify(simplifier, expression::Expression) = nothing
 
-function trysimplify(simplifier::Simplifier, compound::Compound)
+function trysimplify(simplifier, compound::Compound)
     @tryreturn propagate(simplifier, compound)
     @tryreturn liftconditionals(compound)
 end
 
-function propagate(simplifier::Simplifier, compound::Compound)
+function propagate(simplifier, compound::Compound)
     if iscontextual(simplifier)
         @tryreturn mapsome(argcontexts(compound)) do contexts
             mapfirst(compound, contexts) do subexpr, context
@@ -34,7 +34,7 @@ function propagate(simplifier::Simplifier, compound::Compound)
     mapfirst(trysimplify(simplifier), compound)
 end
 
-function trysimplify(simplifier::Simplifier, operation::Operation)
+function trysimplify(simplifier, operation::Operation)
     @tryreturn @invoke trysimplify(simplifier, operation::Compound)
 
     trycombine(simplifier, logicaltype(operation), args(operation)...)
@@ -45,21 +45,21 @@ Override for types which can be combined together under the given operation.
 Returns `nothing` if no transform for the combination is possible.
 `outer` should generally only be used for its type.
 """
-trycombine(::Simplifier, outer::Type{<:Compound}, args::Expression...) = nothing
+trycombine(simplifier, outer::Type{<:Compound}, args::Expression...) = nothing
 trycombine(simplifier, outer::Compound, args...) = trycombine(simplifier, logicaltype(outer), args...)
 
-trycombine(simplifier::Simplifier, outer::Type{<:Compound}, args::Literal...) = mapsome(Literal, tryevaluate(simplifier, outer, map(value, args)...))
+trycombine(simplifier, outer::Type{<:Compound}, args::Literal...) = mapsome(Literal, tryevaluate(simplifier, outer, map(value, args)...))
 
-tryevaluate(::Simplifier, outer::Type{<:Compound}, args...) = nothing
+tryevaluate(simplifier, outer::Type{<:Compound}, args...) = nothing
 
 """
 Override if `initial` has equivalent forms more suitable to combine with `target`.
 Returns a sequence of all possible forms.
 """
-matchingforms(::Simplifier, ::Type{<:Compound}, target::Expression, initial::Expression) = ()
+matchingforms(simplifier, ::Type{<:Compound}, target::Expression, initial::Expression) = ()
 
-matchtrycombine(simplifier::Simplifier, outer::Compound, expr1::Expression, expr2::Expression) = matchtrycombine(simplifier, logicaltype(outer), expr1, expr2)
-function matchtrycombine(simplifier::Simplifier, outer::Type{<:Compound}, expr1::Expression, expr2::Expression)
+matchtrycombine(simplifier, outer::Compound, expr1::Expression, expr2::Expression) = matchtrycombine(simplifier, logicaltype(outer), expr1, expr2)
+function matchtrycombine(simplifier, outer::Type{<:Compound}, expr1::Expression, expr2::Expression)
     @tryreturn trycombine(simplifier, outer, expr1, expr2)
 
     for form2 in matchingforms(simplifier, outer, expr1, expr2)
