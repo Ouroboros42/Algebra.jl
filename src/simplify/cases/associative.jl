@@ -1,10 +1,10 @@
-matchingforms(::Simplifier, ::Type{<:Sum}, target::Prod, initial::Expression) = (similar(target, initial),)
+matchingforms(simplifier, ::Type{<:Sum}, target::Prod, initial::Expression) = (similar(target, initial),)
 
 isnested(assoc::Associative) = isinst(logicaltype(assoc))
 
-toargs(::Associative, expr::Expression) = [ expr ]
-toargs(::Associative{Op}, expr::Associative{Op}) where Op = expr.arguments
-toargs(operation) = expr -> toargs(operation, expr) 
+toargs(assoc::Type{<:Associative}, expr::Expression) = expr isa assoc ? args(expr) : [ expr ]
+toargs(assoc) = expr -> toargs(assoc, expr)
+toargs(operation::Associative) = toargs(logicaltype(operation))
 
 flatten(operation::Associative) = similar(operation, collect(Iterators.flatmap(toargs(operation), args(operation))))
 
@@ -18,7 +18,7 @@ function adjacent(operation::Associative)
     ))
 end
 
-function tryapply(simplifier::Simplifier, operation::Associative)
+function trysimplify(simplifier, operation::Associative)
     if isempty(operation.arguments)
         throw(EmptyOperationError{logicaltype(operation)}())
     end
@@ -29,13 +29,13 @@ function tryapply(simplifier::Simplifier, operation::Associative)
         return flatten(operation)
     end
 
-    @tryreturn @invoke tryapply(simplifier, operation::Compound)
+    @tryreturn @invoke trysimplify(simplifier, operation::Compound)
 
     # Move to trycombine
     @tryreturn firstornothing(isabsorbing(operation), operation.arguments)
     
     if any(isidentity(operation), operation.arguments)
-        return similar(operation, filter(!isidentity(operation), operation.arguments)) 
+        return similar(operation, filter(!isidentity(operation), operation.arguments), first(args(operation))) 
     end
     
     @tryreturn trysort(operation, CentralFirst(operation))

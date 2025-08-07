@@ -11,8 +11,8 @@ realtype(R::Type{<:Real}) = R
 realtype(C::Type{<:Complex}) = fieldtype(C, :re)
 realtype(::Type{Union{A, B}}) where {A, B} = Union{realtype(A), realtype(B)}
 
-realconvert(R, value::Real) = convert(R, value)
-realconvert(R, value::Complex) = convert(Complex{R}, value)
+realconvert(R::Type{<:Real}, value::Real) = convert(R, value)
+realconvert(R::Type{<:Real}, value::Complex) = convert(Complex{R}, value)
 
 const CVector = AbstractVector{<:LogicalComplex}
 const CMatrix = AbstractMatrix{<:LogicalComplex}

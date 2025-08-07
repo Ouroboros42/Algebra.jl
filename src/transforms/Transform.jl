@@ -1,7 +1,13 @@
-abstract type Transform end
+abstract type RecursiveTransform end
 
-tryapply(::Transform, ::Expression) = nothing
+apply(transform) = expression -> apply(transform, expression)
+tryapply(transform) = expression -> tryapply(transform, expression)
 
-apply(transform::Transform, expression::Expression) = @ordefault(tryapply(transform, expression), expression)
+tryapply(transform, expression::Expression) = nothing
 
-apply(transform::Transform) = expression -> apply(transform, expression)
+apply(transform::RecursiveTransform, expression::Expression) = @ordefault(tryapply(transform, expression), expression)
+function apply(transform::RecursiveTransform, compound::Compound)
+    @tryreturn tryapply(transform, compound)
+
+    map(apply(transform), compound)
+end

@@ -1,4 +1,4 @@
-function trycombine(::Simplifier, ::Type{<:Pow}, base::Expression, exponent::Expression)
+function trycombine(simplifier, ::Type{<:Pow}, base::Expression, exponent::Expression)
     if iszero(exponent); return one(base) end
 
     if isone(exponent); return base end
@@ -8,9 +8,9 @@ function trycombine(::Simplifier, ::Type{<:Pow}, base::Expression, exponent::Exp
     # TODO handle zero base
 end
 
-trycombine(simplifier::Simplifier, outer::Type{<:Pow}, base::Literal, exponent::Literal) = @invoke trycombine(simplifier, outer::Type{<:Compound}, base, exponent)
+trycombine(simplifier, outer::Type{<:Pow}, base::Literal, exponent::Literal) = @invoke trycombine(simplifier, outer::Type{<:Compound}, base, exponent)
 
-function trycombine(simplifier::Simplifier, outer::Type{<:Pow}, base::Pow, outerexp::Expression)
+function trycombine(simplifier, outer::Type{<:Pow}, base::Pow, outerexp::Expression)
     @tryreturn @invoke trycombine(simplifier, outer, base::Expression, outerexp)
 
     innerbase, innerexp = base
@@ -20,7 +20,7 @@ function trycombine(simplifier::Simplifier, outer::Type{<:Pow}, base::Pow, outer
     end
 end
 
-function trycombine(simplifier::Simplifier, outer::Type{<:Prod}, pow1::Pow, pow2::Pow)
+function trycombine(simplifier, outer::Type{<:Prod}, pow1::Pow, pow2::Pow)
     (base1, exponent1) = pow1
     (base2, exponent2) = pow2
 
@@ -41,4 +41,4 @@ function trycombine(simplifier::Simplifier, outer::Type{<:Prod}, pow1::Pow, pow2
     @tryreturn @invoke trycombine(simplifier, outer, pow1::Expression, pow2::Expression)
 end
 
-matchingforms(::Simplifier, outer::Type{<:Prod}, power::Pow, single::Expression) = (single ^ ONE,)
+matchingforms(simplifier, outer::Type{<:Prod}, power::Pow, single::Expression) = (single ^ ONE,)

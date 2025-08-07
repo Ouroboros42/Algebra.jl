@@ -12,6 +12,7 @@ function tryinfervaltype(assoc::Type{<:Associative}, args::Vector{<:Expression})
 end
 
 Associative{Op}(arguments::Vector{<:Expression}) where Op = Associative{Op, infervaltype(Associative{Op}, arguments)}(arguments)
+Associative{Op}(arguments::Vector{<:Expression}, emptyvalue::Expression) where Op = isempty(arguments) ? emptyvalue : Associative{Op}(arguments)  
 Associative{Op}(arguments::Expression...) where Op = Associative{Op}(collect(Expression, arguments))
 (A::Type{<:Associative})(arguments...) = A(map(Expression, arguments)...)
 

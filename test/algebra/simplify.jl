@@ -46,4 +46,6 @@ end
 @testset "ifelse" begin
     @test simplify_equal(ifelse(c, x + 1, x - 1) + 10, ifelse(c, x + 11, x + 9))
     @test simplify_equal(ifelse(c, x, y) * ifelse(d, x^2, y^2) - 1, ifelse(c, ifelse(d, x^3 - 1, x * y^2 - 1), ifelse(d, x^2 * y - 1, y^3 - 1)))
+    @test simplify_equal(ifelse(c, x + 2, x + 2), x + 2)
+    @test simplify_equal(ifelse(x == 1, x + 1, 2x), 2x)
 end

@@ -31,3 +31,9 @@ end
     @test 1:5 == map_one_extra(x -> x, [1, 2, 3, 5], [1, 2, 3, 4, 5])
     @test isnothing(map_one_extra(x -> nothing, [1, 3, 4], [1, 5, 3, 4]))
 end
+
+@testset "others" begin
+    using Algebra: others
+
+    @test [[2, 3, 4], [1, 3, 4], [1, 2, 4], [1, 2, 3]] == collect(others(Tuple(1:4))) 
+end
