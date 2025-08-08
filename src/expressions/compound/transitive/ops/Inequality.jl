@@ -1,0 +1,1 @@
+const Inequality = @operator Transitive{<}

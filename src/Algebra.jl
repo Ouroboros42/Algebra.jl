@@ -10,7 +10,7 @@ import Base: isinteger, isreal
 import Base: zero, one, iszero, isone
 import Base: print, show
 import Base: convert
-import Base: +, *, ^, -, /, &, |, ==, !
+import Base: +, *, ^, -, /, &, |, ==, !, <
 import Base: sqrt, ifelse
 
 # Core interface
@@ -46,6 +46,7 @@ include("expressions/compound/operation/ops/Pow.jl")
 include("expressions/compound/operation/ops/Not.jl")
 include("expressions/compound/operation/ops/IfElse.jl")
 include("expressions/compound/transitive/ops/Equality.jl")
+include("expressions/compound/transitive/ops/Inequality.jl")
 include("transforms/Transform.jl")
 include("transforms/Substitute.jl")
 include("simplify/checks.jl")
