@@ -13,6 +13,7 @@ import Base: zero, one, iszero, isone
 import Base: print, show
 import Base: convert
 import Base: +, *, ^, -, /, &, |, ==, !, <
+import Base: sin, cos, tan
 import Base: sqrt, ifelse
 
 # Core interface
@@ -46,6 +47,7 @@ include("expressions/compound/associative/ops/And.jl")
 include("expressions/compound/associative/ops/Or.jl")
 include("expressions/compound/operation/ops/Pow.jl")
 include("expressions/compound/operation/ops/Not.jl")
+include("expressions/compound/operation/ops/Trig.jl")
 include("expressions/compound/operation/ops/IfElse.jl")
 include("expressions/compound/transitive/ops/Equality.jl")
 include("expressions/compound/transitive/ops/Inequality.jl")
@@ -67,6 +69,7 @@ include("simplify/cases/tryimply.jl")
 include("worlds/logicaltypes.jl")
 include("worlds/scalar/ring.jl")
 include("worlds/scalar/powers.jl")
+include("worlds/scalar/trig.jl")
 include("worlds/array/addition.jl")
 include("worlds/array/matmul.jl")
 include("worlds/array/scalar.jl")
