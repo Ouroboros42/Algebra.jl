@@ -13,7 +13,7 @@ import Base: zero, one, iszero, isone
 import Base: print, show
 import Base: convert
 import Base: +, *, ^, -, /, &, |, ==, !, <
-import Base: sin, cos, tan
+import Base: inv, sin, cos, tan
 import Base: sqrt, ifelse
 
 # Core interface
