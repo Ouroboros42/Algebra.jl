@@ -10,6 +10,9 @@ function apply(derivation::Derivation, prod::Prod)
     end)
 end
 
+apply(derivation::Derivation, f::Sin) = apply(derivation, arg(f)) * cos(arg(f))
+apply(derivation::Derivation, f::Cos) = -apply(derivation, arg(f)) * sin(arg(f))
+
 function apply(derivation::Derivation, pow::Pow)
     basederiv, expderiv = map(apply(derivation), args(pow))
     base, exponent = pow
