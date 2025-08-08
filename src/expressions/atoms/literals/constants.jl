@@ -31,3 +31,5 @@ end
 @implement_constcheck(iszero)
 @implement_constcheck(isone)
 
+"""Backup zero for better compatibility with array operations."""
+zero(::Type{Expression}) = ZERO
