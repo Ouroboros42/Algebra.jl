@@ -5,8 +5,8 @@ abstract type Expression{T} end
 
 const Statement = Expression{Bool}
 
-valtype(::Type{E}) where {T, E <: Expression{T}} = T
-valtype(::Type{E}) where {E <: Expression} = nothing
+valtype(::Type{<:Expression{T}}) where T = T
+valtype(::Type{<:Expression}) = nothing
 valtype(::Expression{T}) where T = T
 
 isconst(expression::Expression) = isempty(dependencies(expression))
