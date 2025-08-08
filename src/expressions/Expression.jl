@@ -19,3 +19,8 @@ Pretty-printing Expressions:
 * Generally don't overload 2-arg show, this gives a programmatic expansion, which we would like to keep.
 """
 show(io::IO, ::MIME"text/plain", expression::Expression) = print(io, expression)
+
+"""
+Expressions broadcast as scalars.
+"""
+Base.broadcastable(expression::Expression) = Ref(expression)
