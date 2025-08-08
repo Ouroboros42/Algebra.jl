@@ -18,9 +18,6 @@ end
 trysimplify(simplifier) = expression -> trysimplify(simplifier, expression)
 trysimplify(simplifier, expression::Expression) = mapsome(c -> tryimply(c, expression), context(simplifier))
 
-andargs(statement::Statement) = toargs(And, statement)
-andargs(statement::Literal{Bool}) = Expression[]
-
 function trysimplify(simplifier, compound::Compound)
     @tryreturn propagate(simplifier, compound)
     @tryreturn liftconditionals(compound)

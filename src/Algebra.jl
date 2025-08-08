@@ -3,6 +3,7 @@ module Algebra
 using Logging
 using Base.Order
 
+using Setfield
 using StaticArrays
 
 import Base: valtype, isvalid
