@@ -41,6 +41,7 @@ end
 @testset "equality" begin
     @test simplify_equal((x == y) & (y == 1), (x == y) & (x == 1))
     @test simplify_equal((x == 1) & (x == 2), Literal(false))
+    @test simplify_equal(c == false, !c)
 end
 
 @testset "ifelse" begin
