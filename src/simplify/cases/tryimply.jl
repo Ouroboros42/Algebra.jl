@@ -1,5 +1,5 @@
-tryimply(assumptions::Statement, var::Variable) = firstresult(andargs(assumptions)) do assumption
-    if assumption isa Equality && any(isequal(var), args(assumption))
+tryimply(assumptions::Statement, expression::Expression) = firstresult(andargs(assumptions)) do assumption
+    if assumption isa Equality && !isconst(expression) && any(isequal(expression), args(assumption))
         firstornothing(isconst, args(assumption))
     end
 end
@@ -12,6 +12,6 @@ tryimply(assumptions::Statement, statement::Statement) = firstresult(andargs(ass
     if isequal(assumption, statement)
         return FALSE
     end
-end
 
-tryimply(assumptions::Statement, var::Variable{Bool}) = @invoke tryimply(assumptions, var::Statement)
+    @invoke tryimply(assumptions, statement::Expression)
+end

@@ -18,7 +18,6 @@ end
 trysimplify(simplifier) = expression -> trysimplify(simplifier, expression)
 trysimplify(simplifier, expression::Expression) = mapsome(c -> tryimply(c, expression), context(simplifier))
 
-tryimply(::Statement, ::Expression) = nothing
 andargs(statement::Statement) = toargs(And, statement)
 andargs(statement::Literal{Bool}) = Expression[]
 
