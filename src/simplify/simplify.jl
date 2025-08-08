@@ -14,12 +14,18 @@ function simplify(simplifier, expression::Expression, max_iterations = 1_000_000
     expression
 end
 
+
 trysimplify(simplifier) = expression -> trysimplify(simplifier, expression)
-trysimplify(simplifier, expression::Expression) = nothing
+trysimplify(simplifier, expression::Expression) = mapsome(c -> tryimply(c, expression), context(simplifier))
+
+tryimply(::Statement, ::Expression) = nothing
+andargs(statement::Statement) = toargs(And, statement)
+andargs(statement::Literal{Bool}) = Expression[]
 
 function trysimplify(simplifier, compound::Compound)
     @tryreturn propagate(simplifier, compound)
     @tryreturn liftconditionals(compound)
+    @invoke trysimplify(simplifier, compound::Expression)
 end
 
 function propagate(simplifier, compound::Compound)

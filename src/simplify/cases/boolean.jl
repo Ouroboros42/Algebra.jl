@@ -14,18 +14,6 @@ trycombine(simplifier, ::Type{<:Not}, not::Not) = arg(not)
 
 areconverse(simplifier, a::Statement, b::Statement) = isequal(simplify(simplifier, !a), b)
 
-function trycombine(simplifier, ::Type{<:And}, a::Statement, b::Statement)
-    if isequal(a, b); return a end
-
-    if areconverse(simplifier, a, b); return FALSE end
-end
-
-function trycombine(simplifier, ::Type{<:Or}, a::Statement, b::Statement)
-    if isequal(a, b); return a end
-
-    if areconverse(simplifier, a, b); return TRUE end
-end
-
 function trycombine(simplifier, ::Type{<:IfElse}, condition::Statement, truebranch::Statement, falsebranch::Statement)
     (condition & truebranch) | (!condition & falsebranch)
 end
