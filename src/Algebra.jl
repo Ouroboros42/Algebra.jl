@@ -3,6 +3,8 @@ module Algebra
 using Logging
 using Base.Order
 
+using StaticArrays
+
 import Base: valtype, isvalid
 import Base: iterate, length, getindex
 import Base: isless, isequal, hash

@@ -52,7 +52,7 @@ infervaltype(operation::Type{<:Compound}, args...) = @ordefault tryinfervaltype(
 infervaltype(operation::Type{<:Compound}) = (args...) -> infervaltype(operation, args...)
 
 tryinfervaltype(operation::Type{<:Compound}, ArgTypes::Type...) = nothing
-tryinfervaltype(operation::Type{<:Compound}, args::NTuple{N, Expression} where N) = tryinfervaltype(operation, map(valtype, args)...)
-tryinfervaltype(operation::Type{<:Compound}, args::Expression...) = tryinfervaltype(operation, args)
+tryinfervaltype(operation::Type{<:Compound}, args::SVector{N, Expression} where N) = tryinfervaltype(operation, map(valtype, args)...)
+tryinfervaltype(operation::Type{<:Compound}, args::Expression...) = tryinfervaltype(operation, SVector{length(args), Expression}(args))
 
 isvalid(operation::Type{<:Compound}, args...) = !isnothing(infervaltype(operation, args...))

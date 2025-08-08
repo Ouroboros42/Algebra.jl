@@ -1,13 +1,12 @@
 """
 An `N`-argument operation, labelled by `Op`, which is usually the equivalent julia function. 
 """
-struct Operation{Op, N, T, Args <: NTuple{N, Expression}} <: Compound{T}
-    arguments::Args
+struct Operation{Op, N, T} <: Compound{T}
+    arguments::SVector{N, Expression}
 end
 
-Operation{Op, N, T}(arguments::Args) where {Op, N, T, Args <: NTuple{N, Expression}} = Operation{Op, N, T, Args}(arguments)
-Operation{Op, N}(arguments::NTuple{N, Expression}) where {Op, N} = Operation{Op, N, infervaltype(Operation{Op, N}, arguments)}(arguments)
-Operation{Op, N}(arguments::Expression...) where {Op, N} = Operation{Op, N}(arguments)
+Operation{Op, N}(arguments::SVector{N, Expression}) where {Op, N} = Operation{Op, N, infervaltype(Operation{Op, N}, arguments)}(arguments)
+Operation{Op, N}(arguments::Expression...) where {Op, N} = Operation{Op, N}(SVector{N, Expression}(arguments))
 (F::Type{<:Operation})(arguments...) = F(map(Expression, arguments)...)
 
 logicaltype(::Type{<:Operation{Op, N}}) where {Op, N} = Operation{Op, N}

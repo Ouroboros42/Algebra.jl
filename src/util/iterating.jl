@@ -86,7 +86,7 @@ function ipartition(condition, sequence)
     zip(itrue, sequence[itrue]), zip(ifalse, sequence[ifalse])
 end
 
-replaceat(tup::Tuple, i, newval) = Base.setindex(tup, newval, i)
+replaceat(svec::SVector, i, newval) = Base.setindex(svec, newval, i)
 function replaceat(vec::Vector, i, newval)
     newvec = copy(vec)
     newvec[i] = newval
