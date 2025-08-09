@@ -7,7 +7,6 @@ end
 
 Operation{Op, N}(arguments::SVector{N}) where {Op, N} = Operation{Op, N, infervaltype(Operation{Op, N}, arguments)}(arguments)
 Operation{Op, N}(arguments::Expression...) where {Op, N} = Operation{Op, N}(SVector{N, Expression}(arguments))
-(F::Type{<:Operation})(arguments...) = F(map(Expression, arguments)...)
 
 logicaltype(::Type{<:Operation{Op, N}}) where {Op, N} = Operation{Op, N}
 op(operation::Operation) = op(typeof(operation))

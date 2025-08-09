@@ -3,7 +3,6 @@ struct Transitive{Op} <: Compound{Bool}
 end
 
 Transitive{Op}(args::Expression...) where Op = Transitive{Op}(collect(Expression, args))
-(T::Type{<:Transitive})(arguments...) = T(map(Expression, arguments)...)
 
 logicaltype(::Type{<:Transitive{Op}}) where Op = Transitive{Op}
 op(relation::Transitive) = op(typeof(relation))
