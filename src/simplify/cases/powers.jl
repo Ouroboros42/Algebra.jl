@@ -1,11 +1,9 @@
 function trycombine(simplifier, ::Type{<:Pow}, base::Expression, exponent::Expression)
+    if isone(exponent); return base end
     if iszero(exponent); return one(base) end
 
-    if isone(exponent); return base end
-
     if isone(base); return base end
-
-    # TODO handle zero base
+    if iszero(base); return ifelse(exponent == zero(exponent), one(base), base) end
 end
 
 trycombine(simplifier, outer::Type{<:Pow}, base::Literal, exponent::Literal) = @invoke trycombine(simplifier, outer::Type{<:Compound}, base, exponent)
@@ -18,6 +16,20 @@ function trycombine(simplifier, outer::Type{<:Pow}, base::Pow, outerexp::Express
     if isinteger(outerexp) || (isreal(innerexp) && ispositive(innerbase))
         innerbase ^ (innerexp * outerexp)
     end
+end
+
+function trycombine(simplifier, outer::Type{<:Pow}, base::Prod, exponent::Expression)
+    @tryreturn @invoke trycombine(simplifier, outer, base::Expression, exponent)
+
+    separate(args) = Prod(map(x->x^exponent, args))
+
+    if isinteger(exponent); return separate(args(base)) end
+
+    separable, inseparable = partition(arg -> iscentral(*, arg) && ispositive(arg), args(base))
+
+    if isempty(separable); return end
+
+    separate(separable) * Prod(inseparable) ^ exponent
 end
 
 function trycombine(simplifier, outer::Type{<:Prod}, pow1::Pow, pow2::Pow)

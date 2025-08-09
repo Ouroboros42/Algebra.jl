@@ -86,6 +86,18 @@ function ipartition(condition, sequence)
     zip(itrue, sequence[itrue]), zip(ifalse, sequence[ifalse])
 end
 
+"""
+Return all elements of `sequence`, split into two collections, based on `condition`.
+"""
+function partition(condition, sequence)
+    selected = condition.(sequence)
+
+    itrue = findall(selected)
+    ifalse = findall(.!selected)
+
+    sequence[itrue], sequence[ifalse]
+end
+
 replaceat(svec::SVector, i, newval) = Base.setindex(svec, newval, i)
 function replaceat(vec::Vector, i, newval)
     newvec = copy(vec)
