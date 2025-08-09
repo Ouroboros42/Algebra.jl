@@ -14,6 +14,8 @@ end
 Associative{Op}(arguments::Vector{<:Expression}) where Op = Associative{Op, infervaltype(Associative{Op}, arguments)}(arguments)
 Associative{Op}(arguments::Vector{<:Expression}, emptyvalue::Expression) where Op = isempty(arguments) ? emptyvalue : Associative{Op}(arguments)  
 Associative{Op}(arguments::Expression...) where Op = Associative{Op}(collect(Expression, arguments))
+Associative{Op}(arguments::Array{<:Expression}) where Op = Associative{Op}(reshape(arguments, :))
+Associative{Op}(arguments) where Op = Associative{Op}(collect(Expression, arguments))
 
 logicaltype(::Type{<:Associative{Op}}) where Op = Associative{Op}
 op(operation::Associative) = op(typeof(operation))

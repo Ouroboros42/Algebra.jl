@@ -1,4 +1,5 @@
 matchingforms(simplifier, ::Type{<:Sum}, target::Prod, initial::Expression) = (similar(target, initial),)
+matchingforms(simplifier, ::Type{<:Prod}, target::Sum, initial::Expression) = (similar(target, initial),)
 
 isnested(assoc::Associative) = isinst(logicaltype(assoc))
 

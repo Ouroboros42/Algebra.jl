@@ -1,10 +1,12 @@
 Base.@kwdef struct Simplifier{C, F}
     context::C = nothing
     floattype::F = nothing
+    expands::Bool = false
 end
 
 context(simplifier::Simplifier) = simplifier.context
 floattype(simplifier::Simplifier) = simplifier.floattype
+expands(simplifier::Simplifier) = simplifier.expands
 
 iscontextual(simplifier) = !isnothing(context(simplifier))
 
