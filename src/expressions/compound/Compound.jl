@@ -53,6 +53,6 @@ infervaltype(operation::Type{<:Compound}) = (args...) -> infervaltype(operation,
 
 tryinfervaltype(operation::Type{<:Compound}, ArgTypes::Type...) = nothing
 tryinfervaltype(operation::Type{<:Compound}, args::SVector) = tryinfervaltype(operation, map(valtype, args)...)
-tryinfervaltype(operation::Type{<:Compound}, args::Expression...) = tryinfervaltype(operation, SVector{length(args), Expression}(args))
+tryinfervaltype(operation::Type{<:Compound}, args::Expression...) = tryinfervaltype(operation, map(valtype, args)...)
 
 isvalid(operation::Type{<:Compound}, args...) = !isnothing(infervaltype(operation, args...))
