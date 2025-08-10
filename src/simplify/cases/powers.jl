@@ -20,16 +20,16 @@ end
 
 function trycombine(simplifier, outer::Type{<:Pow}, base::Prod, exponent::Expression)
     @tryreturn @invoke trycombine(simplifier, outer, base::Expression, exponent)
-
-    separate(args) = Prod(map(x->x^exponent, args))
-
-    if isinteger(exponent); return separate(args(base)) end
-
-    separable, inseparable = partition(arg -> iscentral(*, arg) && ispositive(arg), args(base))
+    
+    separable, inseparable = partition(arg -> iscentral(*, arg) && (isinteger(exponent) || ispositive(arg)), args(base))
 
     if isempty(separable); return end
 
-    separate(separable) * Prod(inseparable) ^ exponent
+    separated = Prod(map(x->x^exponent, separable))
+
+    if isempty(inseparable); return separated end
+
+    separated * Prod(inseparable) ^ exponent
 end
 
 function trycombine(simplifier, outer::Type{<:Prod}, pow1::Pow, pow2::Pow)
