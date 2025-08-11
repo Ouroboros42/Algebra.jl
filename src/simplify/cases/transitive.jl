@@ -15,14 +15,11 @@ function trysimplify(simplifier, relation::Transitive)
 end
 
 function trycombine(simplifier, relation::Type{<:Transitive}, expr1::Expression, expr2::Expression)
+    @tryreturn @invoke trycombine(simplifier, relation::Type{<:Compound}, expr1, expr2)
+
     if isreflexive(relation) && isequal(expr1, expr2)
         TRUE
     end
-end
-
-function trycombine(simplifier, relation::Type{<:Transitive}, a::Literal, b::Literal)
-    @tryreturn @invoke trycombine(simplifier, relation::Type{<:Compound}, a, b)
-    @tryreturn @invoke trycombine(simplifier, relation, a::Expression, b::Expression)
 end
 
 function trycombine(simplifier, outer::Type{<:And}, trans1::T, trans2::T) where {T <: Transitive}

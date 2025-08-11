@@ -33,4 +33,3 @@ function trycombine(simplifier, ::Type{<:IfElse}, condition::Statement, truebran
 end
 
 trycombine(simplifier, relation::Type{<:Equality}, a::Statement, b::Statement) = (a & b) | (!a & !b)
-trycombine(simplifier, relation::Type{<:Equality}, a::Literal{Bool}, b::Literal{Bool}) = @invoke trycombine(simplifier, relation::Type{<:Compound}, a, b)

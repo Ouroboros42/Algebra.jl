@@ -2,36 +2,24 @@ repeated_op(::Type{<:Associative}) = nothing
 repeated_op(::Type{<:Sum}) = Prod
 repeated_op(::Type{<:Prod}) = Pow 
 
-tryexpand(::Expression) = nothing
-expand(expr::Expression) = @ordefault(tryexpand(expr), [expr])
-
-expandprod(factors) = sum(prod, Iterators.product(map(toargs(Sum), factors)...))
-tryexpand(product::Prod) = if any(isinst(Sum), args(product))
-    expandprod(args(product))
-end
-tryexpand((base, exponent)::Pow) = if base isa Sum && exponent isa Literal{<:Integer} && ispositive(exponent)
-    expandprod(ntuple(_ -> args(base), value(exponent)))
-end
-
 function trycombine(simplifier, outer::Type{<:Associative}, expr1::Expression, expr2::Expression)
+    @tryreturn @invoke trycombine(simplifier, outer::Type{<:Compound}, expr1, expr2)
+
     @tryreturn mapsome(repeated_op(outer)) do repeated
         if isvalid(repeated, expr1, TWO) && isequal(expr1, expr2)
             repeated(expr1, TWO)
         end
     end
-
-    if outer <: Sum
-        expanded = map(tryexpand, (expr1, expr2))
-
-        if !all(isnothing, expanded)
-            return @ordefault(expanded[1], expr1) + @ordefault(expanded[2], expr2)
-        end
-    end
 end
 
-function trycombine(simplifier, outer::Type{<:Associative}, literal1::Literal, literal2::Literal)
-    @tryreturn @invoke trycombine(simplifier, outer::Type{<:Compound}, literal1, literal2)
-    @tryreturn @invoke trycombine(simplifier, outer, literal1::Expression, literal2::Expression)
+function trycombine(simplifier, outer::Type{<:Sum}, expr1::Expression, expr2::Expression)
+    @tryreturn @invoke trycombine(simplifier, outer::Type{<:Associative}, expr1, expr2)
+    
+    expanded = map(tryexpand, (expr1, expr2))
+
+    if !all(isnothing, expanded)
+        return @ordefault(expanded[1], expr1) + @ordefault(expanded[2], expr2)
+    end
 end
 
 function trycombine(simplifier, outer::Type{<:Sum}, prod1::Prod, prod2::Prod)

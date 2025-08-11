@@ -19,7 +19,7 @@ import Base: sqrt, ifelse
 
 # Core interface
 export @var, Variable, Literal
-export apply, simplify, approximate, substitute
+export apply, simplify, approximate, substitute, expand
 export dependencies
 
 # Expressions types - ideally rarely needed
@@ -60,10 +60,13 @@ include("transforms/derivations/Partial.jl")
 include("simplify/checks.jl")
 include("simplify/Simplifier.jl")
 include("simplify/simplify.jl")
+include("simplify/trysimplify.jl")
+include("simplify/trycombine.jl")
 include("simplify/contexts.jl")
 include("simplify/cases/associative.jl")
 include("simplify/cases/transitive.jl")
 include("simplify/cases/multiples.jl")
+include("simplify/cases/expand.jl")
 include("simplify/cases/powers.jl")
 include("simplify/cases/boolean.jl")
 include("simplify/cases/tryimply.jl")
