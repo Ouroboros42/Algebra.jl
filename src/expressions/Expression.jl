@@ -11,8 +11,10 @@ valtype(::Expression{T}) where T = T
 
 isconst(expression::Expression) = isempty(dependencies(expression))
 
-"""Expression subclasses need only implement ordering withing themselves, differernt-type ordering is automatic."""
-isless(::E1, ::E2) where {E1 <: Expression, E2 <: Expression} = isless(objectid(E1), objectid(E2))
+logicaltype(expression::Expression) = typeof(expression)
+
+"""Expression subclasses need only implement ordering withing themselves, different-type ordering is automatic."""
+isless(expr1::Expression, expr2::Expression) = isless(objectid(logicaltype(expr1)), objectid(logicaltype(expr2)))
 
 """
 Pretty-printing Expressions:
