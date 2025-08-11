@@ -41,7 +41,7 @@ macro implement_op(opfun, Optype, nargs)
     end 
 end
 
-macro operator(expr::Expr, nargs = get(expr.args, 3, 2))
+macro operator(expr::Expr, nargs = @ordefault(firstornothing(isinst(Integer), expr.args), 2))
     if expr.head !== :curly || length(expr.args) < 2
         throw(ArgumentError("Malformed operator Expression type: $expr"))
     end
