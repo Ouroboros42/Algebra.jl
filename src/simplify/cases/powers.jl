@@ -25,11 +25,11 @@ function trycombine(simplifier, outer::Type{<:Pow}, base::Prod, exponent::Expres
 
     if isempty(separable); return end
 
-    separated = Prod(map(x->x^exponent, separable))
+    separated = prod(x->x^exponent, separable)
 
     if isempty(inseparable); return separated end
 
-    separated * Prod(inseparable) ^ exponent
+    separated * prod(inseparable) ^ exponent
 end
 
 function trycombine(simplifier, outer::Type{<:Prod}, pow1::Pow, pow2::Pow)

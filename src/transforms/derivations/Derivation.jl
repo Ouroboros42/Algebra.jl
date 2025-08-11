@@ -5,9 +5,9 @@ apply(derivation::Derivation, sum::Sum) = map(apply(derivation), sum)
 apply(derivation::Derivation, ifelse::IfElse) = mapbranches(apply(derivation), ifelse)
 
 function apply(derivation::Derivation, prod::Prod)
-    Sum(map(iargs(prod)) do (i, arg)
+    sum(iargs(prod)) do (i, arg)
         replaceat(prod, i, apply(derivation, arg))
-    end)
+    end
 end
 
 apply(derivation::Derivation, f::Sin) = apply(derivation, arg(f)) * cos(arg(f))

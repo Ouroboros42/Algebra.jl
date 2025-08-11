@@ -10,10 +10,12 @@ Alternatively override `map` directly to create a copy with transformed argument
 abstract type Compound{T} <: Expression{T} end
 
 """
-Subtypes should implement `logicaltype` to provide a standard copy constructor, as well as an identifier for common methods.
+Subtypes should implement `logicaltype` to provide an identifier for common methods.
+This should not depend on exact valtype, to allow equivalence of different types, ie 0//1 == 0.
 """
 logicaltype(compound::Compound) = logicaltype(typeof(compound))
-similar(compound::Compound, args...) = logicaltype(compound)(args...)
+
+similar(compound::Compound, args...) = typeof(compound)(args...)
 similar(compound::Compound) = (args...) -> similar(compound, args...)
 map(f, compound::Compound) = similar(compound, map(f, args(compound)))
 

@@ -21,7 +21,7 @@ end
 
 @testset "constants combine" begin
     @test simplify_equal(x + z + 3, x + 2 + z + 1)
-    @test simplify_equal(x + π + z + 1, Sum(sort([x, z, Literal(π), Literal(1)])))
+    @test simplify_equal(x + π + z + 1, Sum{Real}(sort([x, z, Literal(π), Literal(1)])))
 end
 
 @testset "compound" begin

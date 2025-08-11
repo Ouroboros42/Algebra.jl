@@ -39,7 +39,7 @@ end
 function trysimplify(simplifier, operation::Operation)
     @tryreturn @invoke trysimplify(simplifier, operation::Compound)
 
-    trycombine(simplifier, logicaltype(operation), args(operation)...)
+    trycombine(simplifier, typeof(operation), args(operation)...)
 end
 
 """
@@ -48,7 +48,7 @@ Returns `nothing` if no transform for the combination is possible.
 `outer` should generally only be used for its type.
 """
 trycombine(simplifier, outer::Type{<:Compound}, args::Expression...) = nothing
-trycombine(simplifier, outer::Compound, args...) = trycombine(simplifier, logicaltype(outer), args...)
+trycombine(simplifier, outer::Compound, args...) = trycombine(simplifier, typeof(outer), args...)
 
 trycombine(simplifier, outer::Type{<:Compound}, args::Literal...) = mapsome(Literal, tryevaluate(simplifier, outer, map(value, args)...))
 
@@ -60,7 +60,7 @@ Returns a sequence of all possible forms.
 """
 matchingforms(simplifier, ::Type{<:Compound}, target::Expression, initial::Expression) = ()
 
-matchtrycombine(simplifier, outer::Compound, expr1::Expression, expr2::Expression) = matchtrycombine(simplifier, logicaltype(outer), expr1, expr2)
+matchtrycombine(simplifier, outer::Compound, expr1::Expression, expr2::Expression) = matchtrycombine(simplifier, typeof(outer), expr1, expr2)
 function matchtrycombine(simplifier, outer::Type{<:Compound}, expr1::Expression, expr2::Expression)
     @tryreturn trycombine(simplifier, outer, expr1, expr2)
 

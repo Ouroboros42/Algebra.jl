@@ -20,6 +20,6 @@ function tryevaluate(simplifier, outer::Type{<:RingOps}, n1::LogicalComplex, n2:
     end
 
     mapsome(floattype(simplifier)) do approxreal
-        return op(outer)(realconvert(approxreal, n1), realconvert(approxreal, n2))
+        return op(outer)(realconvert(approxreal, convert(newtype, n1)), realconvert(approxreal, convert(newtype, n2)))
     end
 end

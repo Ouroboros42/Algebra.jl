@@ -25,13 +25,13 @@ function trycombine(simplifier, relation::Type{<:Transitive}, a::Literal, b::Lit
     @tryreturn @invoke trycombine(simplifier, relation, a::Expression, b::Expression)
 end
 
-function trycombine(simplifier, outer::Type{<:And}, trans1::Transitive{Op}, trans2::Transitive{Op}) where Op
+function trycombine(simplifier, outer::Type{<:And}, trans1::T, trans2::T) where {T <: Transitive}
     @tryreturn @invoke trycombine(simplifier, outer, trans1::Expression, trans2::Expression)
 
-    if issymmetric(trans1) && issymmetric(trans2)
+    if issymmetric(T)
         if isempty(intersect(args(trans1), args(trans2))); return end
 
-        similar(trans1, vcat(args(trans1), args(trans2)))
+        T(vcat(args(trans1), args(trans2)))
     else
 
     end

@@ -5,7 +5,7 @@ repeated_op(::Type{<:Prod}) = Pow
 tryexpand(::Expression) = nothing
 expand(expr::Expression) = @ordefault(tryexpand(expr), [expr])
 
-expandprod(factors) = vec(map(Prod, Iterators.product(map(toargs(Sum), factors)...)))
+expandprod(factors) = sum(prod, Iterators.product(map(toargs(Sum), factors)...))
 tryexpand(product::Prod) = if any(isinst(Sum), args(product))
     expandprod(args(product))
 end
@@ -21,9 +21,10 @@ function trycombine(simplifier, outer::Type{<:Associative}, expr1::Expression, e
     end
 
     if outer <: Sum
-        expanded = [expand(expr1); expand(expr2)]
-        if length(expanded) > 2
-            return Sum(expanded)
+        expanded = map(tryexpand, (expr1, expr2))
+
+        if !all(isnothing, expanded)
+            return @ordefault(expanded[1], expr1) + @ordefault(expanded[2], expr2)
         end
     end
 end
@@ -34,7 +35,7 @@ function trycombine(simplifier, outer::Type{<:Associative}, literal1::Literal, l
 end
 
 function trycombine(simplifier, outer::Type{<:Sum}, prod1::Prod, prod2::Prod)
-    @tryreturn mapsome(Prod, map_single_difference((x, y) -> matchtrycombine(simplifier, outer, x, y), args(prod1), args(prod2)))
-    @tryreturn mapsome(Prod, map_one_extra(x -> matchtrycombine(simplifier, outer, x, one(x)), args(prod1), args(prod2)))
+    @tryreturn mapsome(Prod{valtype(outer)}, map_single_difference((x, y) -> matchtrycombine(simplifier, outer, x, y), args(prod1), args(prod2)))
+    @tryreturn mapsome(Prod{valtype(outer)}, map_one_extra(x -> matchtrycombine(simplifier, outer, x, one(x)), args(prod1), args(prod2)))
     @tryreturn @invoke trycombine(simplifier, outer, prod1::Expression, prod2::Expression)
 end

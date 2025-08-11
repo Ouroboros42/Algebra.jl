@@ -1,16 +1,18 @@
-function mixed_bit_combinations(nbits)
+function mixed_bit_combinations(nbits, include_all = false, include_none = false)
     """Return an iterator of all combinations of `nbits` bits, excluding all false and all true."""
-    ints = 1:(2^nbits-2)
 
-    Iterators.map(i -> digits(Bool, i, base = 2, pad = nbits), ints)
+    start = ifelse(include_none, 0, 1)
+    stop = 2^nbits - ifelse(include_all, 1, 2)
+
+    Iterators.map(i -> digits(Bool, i, base = 2, pad = nbits), start:stop)
 end
 
-macro extend_op(opfun, nargs = 2)
+macro extend_op(opfun, nargs = 2, callfun = opfun, include_base = false)
     opfun = esc(opfun)
 
-    argnames = map(i -> Symbol("arg$i"), 1:nargs)
+    argnames = map(_ -> gensym(:oparg), 1:nargs)
 
-    funcdefs = map(mixed_bit_combinations(nargs)) do whichexprs
+    funcdefs = map(mixed_bit_combinations(nargs, include_base)) do whichexprs
         opdefargs = map(argnames, whichexprs) do argname, isexpr
             isexpr ? :($argname::Expression) : argname
         end
@@ -21,7 +23,7 @@ macro extend_op(opfun, nargs = 2)
             isexpr ? argname : :(Expression($argname))
         end
 
-        opcall = Expr(:call, opfun, opcallargs...)
+        opcall = Expr(:call, callfun, opcallargs...)
 
         Expr(:(=), opdef, opcall)
     end
@@ -34,8 +36,7 @@ macro implement_op(opfun, Optype, nargs)
     Optype = esc(Optype)
 
     quote
-        $opfun(args::Expression...) = $Optype(args...)
-        @extend_op($opfun, $nargs)
+        @extend_op($opfun, $nargs, $Optype, true)
         
         $Optype
     end 

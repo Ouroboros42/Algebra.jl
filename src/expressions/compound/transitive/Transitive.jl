@@ -12,8 +12,8 @@ args(relation::Transitive) = relation.arguments
 
 print(io::IO, relation::Transitive) = print(io, infixstr(relation))
 
-issymmetric(relation::Transitive) = issymmetric(logicaltype(relation))
+issymmetric(relation::Transitive) = issymmetric(typeof(relation))
 issymmetric(::Type{<:Transitive}) = false
 
-isreflexive(relation::Transitive) = isreflexive(logicaltype(relation))
+isreflexive(relation::Transitive) = isreflexive(typeof(relation))
 isreflexive(::Type{<:Transitive}) = false

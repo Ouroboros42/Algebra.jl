@@ -3,19 +3,14 @@ An associative operation, labelled by `Op`, which is usually the equivalent juli
 """
 struct Associative{Op, T} <: Compound{T}
     arguments::Vector{Expression}
+
+    Associative{Op, T}(arguments) where {Op, T} = new(vec(collect(Expression, arguments)))
 end
 
-function tryinfervaltype(assoc::Type{<:Associative}, args::Vector{<:Expression})
-    if isempty(args); return end
-
-    mapreduce(valtype, infervaltype(assoc), args)
-end
-
-Associative{Op}(arguments::Vector{<:Expression}) where Op = Associative{Op, infervaltype(Associative{Op}, arguments)}(arguments)
-Associative{Op}(arguments::Vector{<:Expression}, emptyvalue::Expression) where Op = isempty(arguments) ? emptyvalue : Associative{Op}(arguments)  
-Associative{Op}(arguments::Expression...) where Op = Associative{Op}(collect(Expression, arguments))
-Associative{Op}(arguments::Array{<:Expression}) where Op = Associative{Op}(reshape(arguments, :))
-Associative{Op}(arguments) where Op = Associative{Op}(collect(Expression, arguments))
+Associative{Op, T}(arguments, emptyvalue::Expression) where {Op, T} = isempty(arguments) ? emptyvalue : Associative{Op, T}(arguments)
+Associative{Op, T}(args::Expression...) where {Op, T} = Associative{Op, T}(args)
+Associative{Op}(arg1::Expression, arg2::Expression) where Op = Associative{Op, infervaltype(Associative{Op}, valtype(arg1), valtype(arg2))}(arg1, arg2)
+Associative{Op}(arg::Expression) where Op = Associative{Op, valtype(arg)}(arg)
 
 logicaltype(::Type{<:Associative{Op}}) where Op = Associative{Op}
 op(operation::Associative) = op(typeof(operation))

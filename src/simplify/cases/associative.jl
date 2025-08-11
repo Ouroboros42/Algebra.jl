@@ -1,5 +1,5 @@
-matchingforms(simplifier, ::Type{<:Sum}, target::Prod, initial::Expression) = (similar(target, initial),)
-matchingforms(simplifier, ::Type{<:Prod}, target::Sum, initial::Expression) = (similar(target, initial),)
+matchingforms(simplifier, ::Type{<:Sum}, target::Prod, initial::Expression) = (Prod(initial),)
+matchingforms(simplifier, ::Type{<:Prod}, target::Sum, initial::Expression) = (Sum(initial),)
 
 isnested(assoc::Associative) = isinst(logicaltype(assoc))
 
@@ -7,7 +7,7 @@ toargs(assoc::Type{<:Associative}, expr::Expression) = expr isa assoc ? args(exp
 toargs(assoc) = expr -> toargs(assoc, expr)
 toargs(operation::Associative) = toargs(logicaltype(operation))
 
-flatten(operation::Associative) = similar(operation, collect(Iterators.flatmap(toargs(operation), args(operation))))
+flatten(operation::Associative) = similar(operation, Iterators.flatmap(toargs(operation), args(operation)))
 
 function adjacent(operation::Associative)
     central, ordered = isplitargs(operation)

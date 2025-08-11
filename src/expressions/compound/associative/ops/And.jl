@@ -1,6 +1,4 @@
-const And = @operator Associative{&}
+const And = @operator Associative{&, Bool}
 
 isidentity(::typeof(&), element::Literal{Bool}) = element.value
 isabsorbing(::typeof(&), element::Literal{Bool}) = !element.value
-
-tryinfervaltype(::Type{<:And}, ::Type{Bool}, ::Type{Bool}) = Bool

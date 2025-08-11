@@ -9,6 +9,8 @@ Operation{Op, N}(arguments::SVector{N}) where {Op, N} = Operation{Op, N, inferva
 Operation{Op, N}(arguments::Expression...) where {Op, N} = Operation{Op, N}(SVector{N, Expression}(arguments))
 
 logicaltype(::Type{<:Operation{Op, N}}) where {Op, N} = Operation{Op, N}
+nconstrargs(::Type{<:Operation{Op, N}}) where {Op, N} = N
+
 op(operation::Operation) = op(typeof(operation))
 op(::Type{<:Operation{Op}}) where Op = Op
 
