@@ -21,7 +21,7 @@ function apply(derivation::Derivation, pow::Pow)
         zero(pow)
     else
         if commutes(base, basederiv)
-            exponent * basederiv * base ^ (exponent - 1)
+            exponent * basederiv * base ^ (exponent - one(exponent))
         else
             throw("Non-commuting power derivatives not yet implemented")
         end
