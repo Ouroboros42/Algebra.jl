@@ -144,3 +144,44 @@ end
 
 exceptfor(seq, i) = [seq[begin:i-1]..., seq[i+1:end]...]
 others(seq) = Iterators.map(i -> exceptfor(seq, i), keys(seq))
+
+iunequal(((i1, item1), (i2, item2))) = !isequal(item1, item2)
+"""
+Split `seq1` and `seq2` into a common initial and final sequence, with the differing middle segments.
+Assumes seq1 is longer than seq2.
+"""
+function findcommon_ordered(seq1, seq2)
+    if isempty(seq2); return end
+
+    iseq1 = pairs(IndexLinear(), seq1)
+    iseq2 = pairs(IndexLinear(), seq2)
+
+    firstunequal = firstornothing(iunequal, zip(iseq1, iseq2))
+
+    if isnothing(firstunequal)
+        return (seq2, empty(seq1), seq1[begin+length(seq2):end], empty(seq2))
+    end
+        
+    lastunequal = firstornothing(iunequal, zip(Iterators.reverse(iseq1), Iterators.reverse(iseq2)))
+
+    if isnothing(lastunequal)
+        return (empty(seq1), seq2, seq1[begin:end-length(seq2)], empty(seq2))
+    end
+
+    (rest1start, _), (rest2start, _) = firstunequal
+    (rest1end, _), (rest2end, _) = lastunequal
+
+    if rest1start > rest1end + 1 || rest2start > rest2end + 1
+        return @warn "Impossible state, sequence overlap inconsistent in different directions.\nSequence 1: $seq1\nSequence 2: $seq2"
+    end
+
+    seq1[begin:rest1start-1], seq1[rest1end+1:end], seq1[rest1start:rest1end], seq2[rest2start:rest2end]
+end
+
+function findcommon(seq1, seq2)
+    if length(seq1) >= length(seq2); return findcommon_ordered(seq1, seq2) end
+
+    (commonhead, commontail, rest2, rest1) = findcommon_ordered(seq2, seq1)
+    
+    commonhead, commontail, rest1, rest2
+end

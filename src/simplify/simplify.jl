@@ -1,4 +1,4 @@
-function simplify(simplifier, expression::Expression, max_iterations = nothing)
+function simplify(simplifier, expression::Expression, max_iterations = 1000)
     iterator = isnothing(max_iterations) ? Iterators.repeated(nothing) : (1:max_iterations)
 
     for _ in iterator
@@ -15,3 +15,5 @@ function simplify(simplifier, expression::Expression, max_iterations = nothing)
 
     expression
 end
+
+simplify(simplifier, expressions; kwargs...) = map(expr -> simplify(simplifier, expr; kwargs...), expressions)

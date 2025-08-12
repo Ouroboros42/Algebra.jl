@@ -16,6 +16,7 @@ import Base: convert
 import Base: +, *, ^, -, /, &, |, ==, !, <
 import Base: inv, sin, cos, tan
 import Base: sqrt, ifelse
+import Base: sum, prod
 
 # Core interface
 export @var, Variable, Literal
@@ -62,10 +63,11 @@ include("simplify/Simplifier.jl")
 include("simplify/simplify.jl")
 include("simplify/trysimplify.jl")
 include("simplify/trycombine.jl")
+include("simplify/cofactorise.jl")
 include("simplify/contexts.jl")
 include("simplify/cases/associative.jl")
 include("simplify/cases/transitive.jl")
-include("simplify/cases/multiples.jl")
+include("simplify/cases/addition.jl")
 include("simplify/cases/expand.jl")
 include("simplify/cases/powers.jl")
 include("simplify/cases/boolean.jl")

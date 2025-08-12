@@ -1,5 +1,13 @@
 matchingforms(simplifier, outer::Type{<:Prod}, power::Pow, single::Expression) = (single ^ ONE,)
 
+function trycombine(simplifier, outer::Type{<:Prod}, expr1::Expression, expr2::Expression)
+    @tryreturn @invoke trycombine(simplifier, outer::Type{<:Compound}, expr1, expr2)
+
+    if isvalid(Pow, expr1, TWO) && isequal(expr1, expr2)
+        return Pow(expr1, TWO)
+    end
+end
+
 function trycombine(simplifier, outer::Type{<:Pow}, base::Expression, exponent::Expression)
     @tryreturn @invoke trycombine(simplifier, outer::Type{<:Compound}, base, exponent)
 
