@@ -6,7 +6,9 @@ struct Associative{Op, T} <: Compound{T}
 
     Associative{Op, T}(arguments) where {Op, T} = Associative{Op, T}(vec(collect(Expression, arguments)))
 
-    function Associative{Op, T}(arguments::Vector{Expression}) where {Op, T}
+    function Associative{Op, T}(arguments::Vector{Expression}, force::Bool = false) where {Op, T}
+        if force; return new(arguments) end
+
         if isempty(arguments);
             @tryreturn identity(Associative{Op, T})
         end
@@ -31,7 +33,7 @@ toargs(operation::Associative) = toargs(logicaltype(operation))
 Associative{Op, T}(arguments, emptyvalue::Expression) where {Op, T} = isempty(arguments) ? emptyvalue : Associative{Op, T}(arguments)
 Associative{Op, T}(args::Expression...) where {Op, T} = Associative{Op, T}(args)
 Associative{Op}(arg1::Expression, arg2::Expression) where Op = Associative{Op, infervaltype(Associative{Op}, valtype(arg1), valtype(arg2))}(arg1, arg2)
-Associative{Op}(arg::Expression) where Op = Associative{Op, valtype(arg)}(arg)
+Associative{Op}(arg::Expression) where Op = Associative{Op, valtype(arg)}(Expression[arg], true)
 
 logicaltype(::Type{<:Associative{Op}}) where Op = Associative{Op}
 op(operation::Associative) = op(typeof(operation))
