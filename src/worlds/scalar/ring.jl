@@ -1,8 +1,8 @@
 const RingOps = Union{Sum, Prod}
 const oldRingOps = Union{typeof(+), typeof(*)}
 
-iscentral(::typeof(+), ::Expression{<:CLinear}) = true
-iscentral(::typeof(*), ::Expression{<:LogicalComplex}) = true
+iscentral(::Type{<:Sum}, ::Expression{<:CLinear}) = true
+iscentral(::Type{<:Prod}, ::Expression{<:LogicalComplex}) = true
 
 tryinfervaltype(::Type{<:RingOps}, N1::Type{<:Number}, N2::Type{<:Number}) = ring_promote(N1, N2)
 

@@ -4,4 +4,5 @@ const Sum = @operator Associative{+}
 -(first::Expression, second::Expression) = first + -second
 @extend_op(-)
 
-isidentity(::typeof(+), element::Expression) = iszero(element)
+identity(S::Type{<:Sum{T}}) where T = zero(S) 
+isidentity(::Type{<:Sum}, element::Expression) = iszero(element)

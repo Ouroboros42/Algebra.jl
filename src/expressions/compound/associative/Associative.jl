@@ -4,8 +4,29 @@ An associative operation, labelled by `Op`, which is usually the equivalent juli
 struct Associative{Op, T} <: Compound{T}
     arguments::Vector{Expression}
 
-    Associative{Op, T}(arguments) where {Op, T} = new(vec(collect(Expression, arguments)))
+    Associative{Op, T}(arguments) where {Op, T} = Associative{Op, T}(vec(collect(Expression, arguments)))
+
+    function Associative{Op, T}(arguments::Vector{Expression}) where {Op, T}
+        if isempty(arguments);
+            @tryreturn identity(Associative{Op, T})
+        end
+
+        @tryreturn onlyornothing(arguments)
+
+        if any(isinst(Associative{Op}), arguments)
+            return Associative{Op, T}(Iterators.flatmap(toargs(Associative{Op}), arguments))
+        end
+
+        # TODO implement a sorting algorithm that does not require a proper ordering
+        sort!(arguments; order=CentralFirst{Associative{Op}}())
+
+        new(arguments)
+    end
 end
+
+toargs(assoc) = expr -> toargs(assoc, expr)
+toargs(assoc::Type{<:Associative}, expr::Expression) = expr isa assoc ? args(expr) : [ expr ]
+toargs(operation::Associative) = toargs(logicaltype(operation))
 
 Associative{Op, T}(arguments, emptyvalue::Expression) where {Op, T} = isempty(arguments) ? emptyvalue : Associative{Op, T}(arguments)
 Associative{Op, T}(args::Expression...) where {Op, T} = Associative{Op, T}(args)
@@ -20,25 +41,27 @@ args(operation::Associative) = operation.arguments
 
 print(io::IO, associative::Associative) = print(io, infixstr(associative))
 
-isidentity(Op, ::Expression) = false
-isidentity(assoc::Associative) = element -> isidentity(op(assoc), element)
+identity(::Type{<:Associative}) = nothing
+identity(assoc::Associative) = identity(typeof(assoc))
 
-isabsorbing(Op, ::Expression) = false
-isabsorbing(assoc::Associative) = element -> isabsorbing(op(assoc), element)
+isidentity(assoc, ::Expression) = false
+isidentity(assoc::Associative) = element -> isidentity(typeof(assoc), element)
 
-iscentral(Op, element::Expression) = isidentity(Op, element) || isabsorbing(Op, element)
-iscentral(assoc::Associative) = element -> iscentral(op(assoc), element)
+isabsorbing(assoc, ::Expression) = false
+isabsorbing(assoc::Associative) = element -> isabsorbing(typeof(assoc), element)
+
+iscentral(assoc, element::Expression) = isidentity(assoc, element) || isabsorbing(assoc, element)
+iscentral(assoc::Associative) = element -> iscentral(typeof(assoc), element)
 
 isplitargs(operation::Associative) = ipartition(iscentral(operation), operation.arguments)
 
-struct CentralFirst{Op} <: Ordering end
+struct CentralFirst{Assoc} <: Ordering end
+CentralFirst(assoc::Associative) = CentralFirst{logicaltype(assoc)}()
 
-CentralFirst(assoc::Associative) = CentralFirst{op(assoc)}()
+function Order.lt(::CentralFirst{Assoc}, a::Expression, b::Expression) where Assoc
+    if !iscentral(Assoc, a); return false end
 
-function Order.lt(::CentralFirst{Op}, a::Expression, b::Expression) where Op
-    if !iscentral(Op, a); return false end
-
-    if !iscentral(Op, b); return true end
+    if !iscentral(Assoc, b); return true end
 
     isless(a, b)
 end

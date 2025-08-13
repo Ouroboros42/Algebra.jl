@@ -4,5 +4,6 @@ inv(expression::Expression) = expression ^ NEG
 /(first::Expression, second::Expression) = first * inv(second)
 @extend_op(/)
 
-isidentity(::typeof(*), element::Expression) = isone(element)
-isabsorbing(::typeof(*), element::Expression) = iszero(element)
+identity(P::Type{<:Prod{T}}) where T = one(P) 
+isidentity(::Type{<:Prod}, element::Expression) = isone(element)
+isabsorbing(::Type{<:Prod}, element::Expression) = iszero(element)

@@ -31,7 +31,7 @@ end
 function trycombine(simplifier, outer::Type{<:Pow}, base::Prod, exponent::Expression)
     @tryreturn @invoke trycombine(simplifier, outer, base::Expression, exponent)
     
-    separable, inseparable = partition(arg -> iscentral(*, arg) && (isinteger(exponent) || ispositive(arg)), args(base))
+    separable, inseparable = partition(arg -> iscentral(Prod, arg) && (isinteger(exponent) || ispositive(arg)), args(base))
 
     if isempty(separable); return end
 

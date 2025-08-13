@@ -1,4 +1,4 @@
 const And = @operator Associative{&, Bool}
 
-isidentity(::typeof(&), element::Literal{Bool}) = element.value
-isabsorbing(::typeof(&), element::Literal{Bool}) = !element.value
+isidentity(::Type{<:And}, element::Literal{Bool}) = element.value
+isabsorbing(::Type{<:And}, element::Literal{Bool}) = !element.value
