@@ -1,6 +1,3 @@
-matchingforms(simplifier, ::Type{<:Sum}, target::Prod, initial::Expression) = (Prod(initial),)
-matchingforms(simplifier, ::Type{<:Prod}, target::Sum, initial::Expression) = (Sum(initial),)
-
 function adjacent(operation::Associative)
     central, ordered = isplitargs(operation)
 

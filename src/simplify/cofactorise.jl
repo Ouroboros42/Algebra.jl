@@ -13,16 +13,21 @@ function cofactorise(simplifier, expr1::Expression, expr2::Expression)
     simplify(simplifier, (commonleft, commonright, rest1, rest2))
 end
 
-trycofactorise(simplifier, expr1::Expression, expr2::Expression) = if isequal(expr1, expr2)
-    (expr1, one(expr1), one(expr1), one(expr1))
-end
+function trycofactorise(simplifier, expr1::Expression, expr2::Expression)
+    if isequal(expr1, expr2)
+        return (expr1, one(expr1), one(expr1), one(expr1))
+    end
 
-function trycofactorise(simplifier, prod1::Prod, prod2::Prod)
-    commonsplit = findcommon(args(prod1), args(prod2))
+    if any(isinst(Prod), (expr1, expr2))
+        factors1 = toargs(Prod, expr1)
+        factors2 = toargs(Prod, expr2)
 
-    if all(isempty, first(commonsplit, 2)); return end
+        commonsplit = findcommon(factors1, factors2)
 
-    T = infervaltype(Sum, prod1, prod2)
+        if all(isempty, first(commonsplit, 2)); return end
 
-    map(arguments -> Prod{T}(arguments, Literal(one(T))), commonsplit)
+        T = infervaltype(Sum, expr1, expr2)
+
+        Prod{T}.(commonsplit, Literal(one(T)))
+    end
 end
